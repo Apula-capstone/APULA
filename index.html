@@ -1152,7 +1152,20 @@
             }
         }
 
-        /* Responsive Design */
+        /* Focused Camera View */
+        .focused-camera-view {
+            display: none;
+            position: relative;
+            height: 500px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive Design - Improved for mobile */
         @media (max-width: 1400px) {
             .dashboard-grid {
                 grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -1167,16 +1180,19 @@
             .dashboard-grid {
                 gap: 20px;
             }
+            
+            .camera-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .connection-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .camera-controls,
-            .connection-panel {
-                grid-template-columns: repeat(2, 1fr);
             }
             
             .status-cards {
@@ -1206,25 +1222,41 @@
             
             .multi-camera-grid {
                 height: 400px;
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
             }
             
             .camera-view-controls {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
                 align-items: center;
             }
             
             .view-control-btn {
-                width: 100%;
-                max-width: 200px;
+                min-width: 100px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .single-camera-feed {
+                height: 300px;
+            }
+            
+            .focused-camera-view {
+                height: 350px;
+            }
+            
+            .individual-snapshot-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cam-snap-btn {
+                padding: 10px;
+                font-size: 0.8rem;
             }
         }
 
         @media (max-width: 480px) {
-            .camera-controls,
-            .connection-panel {
-                grid-template-columns: 1fr;
-            }
-            
             .logo {
                 font-size: 2.8rem;
             }
@@ -1234,11 +1266,37 @@
             }
             
             .multi-camera-grid {
+                height: 350px;
+            }
+            
+            .camera-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .connection-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .camera-view-controls {
+                gap: 5px;
+            }
+            
+            .view-control-btn {
+                min-width: 80px;
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .single-camera-feed {
+                height: 250px;
+            }
+            
+            .focused-camera-view {
                 height: 300px;
             }
             
             .individual-snapshot-buttons {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1247,6 +1305,50 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
+        }
+        
+        /* Fullscreen styles */
+        .fullscreen-mode .multi-camera-grid {
+            height: calc(100vh - 100px) !important;
+            gap: 5px;
+        }
+        
+        .fullscreen-mode .focused-camera-view {
+            height: calc(100vh - 100px) !important;
+        }
+        
+        .fullscreen-mode .single-camera-feed {
+            height: calc(100vh - 100px) !important;
+        }
+        
+        /* Hide elements in fullscreen */
+        body:fullscreen .container,
+        body:-webkit-full-screen .container,
+        body:-moz-full-screen .container,
+        body:-ms-fullscreen .container {
+            padding: 10px !important;
+        }
+        
+        body:fullscreen .header,
+        body:-webkit-full-screen .header,
+        body:-moz-full-screen .header,
+        body:-ms-fullscreen .header {
+            display: none !important;
+        }
+        
+        body:fullscreen .card-title,
+        body:-webkit-full-screen .card-title,
+        body:-moz-full-screen .card-title,
+        body:-ms-fullscreen .card-title {
+            font-size: 1.2rem !important;
+            margin-bottom: 15px !important;
+        }
+        
+        body:fullscreen .card,
+        body:-webkit-full-screen .card,
+        body:-moz-full-screen .card,
+        body:-ms-fullscreen .card {
+            padding: 20px !important;
         }
     </style>
 </head>
@@ -1387,7 +1489,7 @@
             <!-- Center Column -->
             <div class="column">
                 <!-- Live Camera Feed -->
-                <div class="card">
+                <div class="card" id="cameraCard">
                     <h2 class="card-title">
                         <i class="fas fa-eye"></i>
                         Live Camera Feed
@@ -1492,6 +1594,17 @@
                             </div>
                             <div class="camera-label">Camera 4</div>
                         </div>
+                    </div>
+                    
+                    <!-- Focused Camera View (Hidden by default) -->
+                    <div class="focused-camera-view" id="focusedCameraView">
+                        <video id="focusedCameraFeed" autoplay playsinline muted></video>
+                        <div class="camera-label" id="focusedCameraLabel">Camera 1</div>
+                        <button class="view-control-btn" onclick="changeCameraView('grid')" 
+                                style="position: absolute; top: 10px; right: 10px; padding: 10px 15px; z-index: 10;">
+                            <i class="fas fa-th-large"></i>
+                            Grid View
+                        </button>
                     </div>
                     
                     <!-- Camera Controls -->
@@ -1733,7 +1846,7 @@
     </div>
 
     <script>
-        // Enhanced APULA Application with Multiple Cameras
+        // Enhanced APULA Application with Multiple Cameras and Local Storage
         class APULAApp {
             constructor() {
                 this.cameras = {
@@ -1743,7 +1856,7 @@
                     4: { stream: null, mediaRecorder: null, isActive: false }
                 };
                 this.activeCamera = 'camera1'; // Default to single camera view
-                this.currentView = 'single'; // 'single' or 'multi'
+                this.currentView = 'single'; // 'single', 'multi', or 'focused'
                 this.multipleScreenMode = false; // Default to single screen
                 this.isRecording = false;
                 this.currentRecordingCamera = null;
@@ -1763,9 +1876,10 @@
             }
             
             init() {
+                this.loadFromLocalStorage();
                 this.bindEvents();
                 this.updateStats();
-                this.initGallery();
+                this.updateGallery();
                 this.updatePressure(80);
                 this.showNotification('System Initialized', 'APULA single camera mode active', 'info');
                 this.addLog('System initialized with single camera mode', 'info');
@@ -1775,6 +1889,88 @@
                 multipleScreenToggle.addEventListener('change', (e) => {
                     this.toggleMultipleScreenMode(e.target.checked);
                 });
+                
+                // Listen for fullscreen changes
+                document.addEventListener('fullscreenchange', this.handleFullscreenChange.bind(this));
+                document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
+                document.addEventListener('mozfullscreenchange', this.handleFullscreenChange.bind(this));
+                document.addEventListener('MSFullscreenChange', this.handleFullscreenChange.bind(this));
+            }
+            
+            loadFromLocalStorage() {
+                // Load gallery from localStorage
+                const savedGallery = localStorage.getItem('apula_gallery');
+                if (savedGallery) {
+                    try {
+                        this.mediaGallery = JSON.parse(savedGallery);
+                        this.mediaGallery.forEach(item => {
+                            if (item.type === 'image') {
+                                // Images are stored as base64 in localStorage
+                                // Already properly saved
+                            } else if (item.type === 'video') {
+                                // Videos need to be recreated from blob URLs
+                                // We'll handle this when displaying
+                            }
+                        });
+                        this.addLog('Loaded gallery from local storage', 'info');
+                    } catch (e) {
+                        console.error('Failed to load gallery:', e);
+                        this.mediaGallery = [];
+                    }
+                }
+                
+                // Load stats
+                const savedStats = localStorage.getItem('apula_stats');
+                if (savedStats) {
+                    try {
+                        const stats = JSON.parse(savedStats);
+                        this.stats.fires = stats.fires || 0;
+                        this.stats.waterActivations = stats.waterActivations || 0;
+                        this.stats.mediaCount = stats.mediaCount || 0;
+                        this.stats.storageUsed = stats.storageUsed || 0;
+                    } catch (e) {
+                        console.error('Failed to load stats:', e);
+                    }
+                }
+                
+                // Load multiple screen mode
+                const savedMode = localStorage.getItem('apula_multiple_screen');
+                if (savedMode === 'true') {
+                    document.getElementById('multipleScreenToggle').checked = true;
+                    setTimeout(() => this.toggleMultipleScreenMode(true), 100);
+                }
+            }
+            
+            saveToLocalStorage() {
+                try {
+                    // Save gallery (excluding video blobs for storage)
+                    const galleryToSave = this.mediaGallery.map(item => {
+                        if (item.type === 'video') {
+                            // Don't save blob in localStorage (it's too large)
+                            return {
+                                ...item,
+                                blob: null,
+                                url: null // Will be regenerated on load
+                            };
+                        }
+                        return item;
+                    });
+                    localStorage.setItem('apula_gallery', JSON.stringify(galleryToSave));
+                    
+                    // Save stats
+                    localStorage.setItem('apula_stats', JSON.stringify({
+                        fires: this.stats.fires,
+                        waterActivations: this.stats.waterActivations,
+                        mediaCount: this.stats.mediaCount,
+                        storageUsed: this.stats.storageUsed
+                    }));
+                    
+                    // Save multiple screen mode
+                    localStorage.setItem('apula_multiple_screen', this.multipleScreenMode.toString());
+                    
+                } catch (e) {
+                    console.error('Failed to save to localStorage:', e);
+                }
             }
             
             bindEvents() {
@@ -1807,6 +2003,11 @@
                 
                 // Add test fire detection button
                 this.addTestFireButtons();
+                
+                // Save to localStorage before page unload
+                window.addEventListener('beforeunload', () => {
+                    this.saveToLocalStorage();
+                });
             }
             
             toggleMultipleScreenMode(enabled) {
@@ -1819,8 +2020,10 @@
                         'info');
                     this.addLog('Multiple screen mode enabled - 4 camera grid active', 'info');
                     
-                    // Show multi-camera grid
+                    // Hide single camera view
                     document.getElementById('singleCameraView').style.display = 'none';
+                    
+                    // Show multi-camera grid
                     document.getElementById('multiCameraGrid').style.display = 'grid';
                     
                     // Show camera view controls
@@ -1836,6 +2039,9 @@
                     // Set initial view to grid
                     this.changeCameraView('grid');
                     
+                    // Copy camera streams from single view to multi-view
+                    this.copyCameraStreamsToMultiView();
+                    
                 } else {
                     // Switch to single camera mode
                     this.showNotification('Single Screen Mode', 
@@ -1845,7 +2051,10 @@
                     
                     // Show single camera view
                     document.getElementById('singleCameraView').style.display = 'block';
+                    
+                    // Hide multi-camera views
                     document.getElementById('multiCameraGrid').style.display = 'none';
+                    document.getElementById('focusedCameraView').style.display = 'none';
                     
                     // Hide camera view controls
                     document.getElementById('cameraViewControls').style.display = 'none';
@@ -1859,6 +2068,22 @@
                     
                     // Set view to camera 1
                     this.activeCamera = 'camera1';
+                    this.currentView = 'single';
+                }
+                
+                // Save to localStorage
+                this.saveToLocalStorage();
+            }
+            
+            copyCameraStreamsToMultiView() {
+                // Copy camera 1 stream to multi-view if active
+                if (this.cameras[1].isActive && this.cameras[1].stream) {
+                    const videoElement = document.getElementById('cameraFeed1multi');
+                    if (videoElement) {
+                        videoElement.srcObject = this.cameras[1].stream;
+                        videoElement.style.display = 'block';
+                        document.getElementById('cameraPlaceholder1multi').style.display = 'none';
+                    }
                 }
             }
             
@@ -1892,11 +2117,12 @@
                     // Set up camera feed for both single and multi views
                     if (this.multipleScreenMode) {
                         // Set up for multi-camera view
-                        const videoElementMulti = document.getElementById(`cameraFeed${cameraNumber}${cameraNumber === 1 ? 'multi' : ''}`);
+                        const videoElementMulti = document.getElementById(cameraNumber === 1 ? 'cameraFeed1multi' : `cameraFeed${cameraNumber}`);
                         if (videoElementMulti) {
                             videoElementMulti.srcObject = stream;
                             videoElementMulti.style.display = 'block';
-                            document.getElementById(`cameraPlaceholder${cameraNumber}${cameraNumber === 1 ? 'multi' : ''}`).style.display = 'none';
+                            const placeholderId = cameraNumber === 1 ? 'cameraPlaceholder1multi' : `cameraPlaceholder${cameraNumber}`;
+                            document.getElementById(placeholderId).style.display = 'none';
                         }
                     } else {
                         // Set up for single camera view
@@ -1992,58 +2218,51 @@
             changeCameraView(view) {
                 if (!this.multipleScreenMode) return;
                 
-                this.activeCamera = view;
-                
                 // Update all view control buttons
                 document.querySelectorAll('.view-control-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 
                 // Activate the clicked button
+                document.getElementById(`${view}ViewBtn`).classList.add('active');
+                
                 if (view === 'grid') {
-                    document.getElementById('gridViewBtn').classList.add('active');
+                    // Show grid view
                     document.getElementById('multiCameraGrid').style.display = 'grid';
+                    document.getElementById('focusedCameraView').style.display = 'none';
+                    this.currentView = 'multi';
+                    this.activeCamera = 'grid';
                     this.addLog('Switched to grid view (all cameras)', 'info');
                 } else {
+                    // Show focused camera view
                     const cameraNumber = parseInt(view.replace('camera', ''));
-                    document.getElementById(`${view}ViewBtn`).classList.add('active');
                     
-                    // Show only the selected camera in full screen
-                    document.getElementById('multiCameraGrid').style.display = 'none';
-                    
-                    // Show single camera in multi grid (temporarily)
-                    const cameraContainer = document.getElementById(`cameraContainer${cameraNumber}`);
-                    cameraContainer.style.gridColumn = '1 / span 2';
-                    cameraContainer.style.gridRow = '1 / span 2';
-                    
-                    // Reset other cameras
-                    for (let i = 1; i <= 4; i++) {
-                        if (i !== cameraNumber) {
-                            const otherContainer = document.getElementById(`cameraContainer${i}`);
-                            otherContainer.style.display = 'none';
+                    if (this.cameras[cameraNumber].isActive) {
+                        const focusedVideo = document.getElementById('focusedCameraFeed');
+                        const focusedLabel = document.getElementById('focusedCameraLabel');
+                        
+                        // Get the stream from the camera
+                        const stream = this.cameras[cameraNumber].stream;
+                        if (stream) {
+                            focusedVideo.srcObject = stream;
+                            focusedVideo.style.display = 'block';
+                            focusedLabel.textContent = `Camera ${cameraNumber}`;
+                            
+                            // Show focused view, hide grid
+                            document.getElementById('multiCameraGrid').style.display = 'none';
+                            document.getElementById('focusedCameraView').style.display = 'block';
+                            
+                            this.currentView = 'focused';
+                            this.activeCamera = view;
+                            this.addLog(`Switched to Camera ${cameraNumber} focused view`, 'info');
                         }
+                    } else {
+                        this.showNotification('Camera Not Available', 
+                            `Camera ${cameraNumber} is not connected`, 
+                            'warning');
+                        this.changeCameraView('grid');
                     }
-                    
-                    this.addLog(`Switched to Camera ${cameraNumber} view`, 'info');
-                    
-                    // Reset to grid view after 30 seconds
-                    setTimeout(() => {
-                        if (this.activeCamera === view && this.multipleScreenMode) {
-                            this.changeCameraView('grid');
-                        }
-                    }, 30000);
                 }
-            }
-            
-            resetGridLayout() {
-                // Reset all cameras to normal grid layout
-                for (let i = 1; i <= 4; i++) {
-                    const cameraContainer = document.getElementById(`cameraContainer${i}`);
-                    cameraContainer.style.gridColumn = '';
-                    cameraContainer.style.gridRow = '';
-                    cameraContainer.style.display = '';
-                }
-                document.getElementById('multiCameraGrid').style.display = 'grid';
             }
             
             startRecording() {
@@ -2061,7 +2280,7 @@
                 let cameraNumber;
                 
                 if (this.multipleScreenMode) {
-                    if (this.activeCamera === 'grid') {
+                    if (this.currentView === 'multi' || this.activeCamera === 'grid') {
                         // Record from first active camera in grid view
                         for (let i = 1; i <= 4; i++) {
                             if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
@@ -2069,8 +2288,8 @@
                                 break;
                             }
                         }
-                    } else {
-                        // Record from the active camera view
+                    } else if (this.currentView === 'focused') {
+                        // Record from the focused camera
                         cameraNumber = parseInt(this.activeCamera.replace('camera', ''));
                     }
                 } else {
@@ -2136,25 +2355,34 @@
                 
                 const sizeMB = Math.round(blob.size / 1024 / 1024 * 100) / 100;
                 const timestamp = new Date().toLocaleString();
-                
-                // Add to gallery
                 const videoUrl = URL.createObjectURL(blob);
-                const mediaItem = {
-                    type: 'video',
-                    url: videoUrl,
-                    camera: cameraNumber,
-                    timestamp: timestamp,
-                    size: sizeMB,
-                    blob: blob
+                
+                // Create a preview of the video for the gallery
+                const video = document.createElement('video');
+                video.src = videoUrl;
+                video.preload = 'metadata';
+                
+                video.onloadedmetadata = () => {
+                    // Add to gallery
+                    const mediaItem = {
+                        type: 'video',
+                        url: videoUrl,
+                        camera: cameraNumber,
+                        timestamp: timestamp,
+                        size: sizeMB,
+                        blob: blob,
+                        duration: Math.round(video.duration)
+                    };
+                    
+                    this.mediaGallery.push(mediaItem);
+                    this.stats.mediaCount++;
+                    this.stats.storageUsed += sizeMB;
+                    this.updateStats();
+                    this.updateGallery();
+                    this.saveToLocalStorage();
+                    
+                    this.addLog(`Recording saved from Camera ${cameraNumber} (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
                 };
-                
-                this.mediaGallery.push(mediaItem);
-                this.stats.mediaCount++;
-                this.stats.storageUsed += sizeMB;
-                this.updateStats();
-                this.updateGallery();
-                
-                this.addLog(`Recording saved from Camera ${cameraNumber} (${sizeMB} MB)`, 'info');
             }
             
             captureSnapshot() {
@@ -2173,7 +2401,11 @@
                 let videoElement;
                 
                 if (this.multipleScreenMode) {
-                    videoElement = document.getElementById(`cameraFeed${cameraNumber}${cameraNumber === 1 ? 'multi' : ''}`);
+                    if (this.currentView === 'focused' && this.activeCamera === `camera${cameraNumber}`) {
+                        videoElement = document.getElementById('focusedCameraFeed');
+                    } else {
+                        videoElement = document.getElementById(cameraNumber === 1 ? 'cameraFeed1multi' : `cameraFeed${cameraNumber}`);
+                    }
                 } else {
                     videoElement = document.getElementById('cameraFeed1');
                 }
@@ -2184,44 +2416,54 @@
                 }
                 
                 const canvas = document.createElement('canvas');
-                canvas.width = videoElement.videoWidth;
-                canvas.height = videoElement.videoHeight;
-                canvas.getContext('2d').drawImage(videoElement, 0, 0);
+                canvas.width = videoElement.videoWidth || 640;
+                canvas.height = videoElement.videoHeight || 480;
                 
-                const timestamp = new Date().toLocaleString();
-                
-                // Add to gallery
-                const imageUrl = canvas.toDataURL('image/png');
-                const mediaItem = {
-                    type: 'image',
-                    url: imageUrl,
-                    camera: cameraNumber,
-                    timestamp: timestamp,
-                    size: 0.1, // Estimated size in MB
-                    blob: null // Store base64 for images
-                };
-                
-                this.mediaGallery.push(mediaItem);
-                this.stats.mediaCount++;
-                this.stats.storageUsed += 0.1;
-                this.updateStats();
-                this.updateGallery();
-                
-                this.showNotification('Snapshot Saved', 
-                    `Snapshot from Camera ${cameraNumber} saved to gallery`, 
-                    'success');
-                this.addLog(`Snapshot captured from Camera ${cameraNumber}`, 'info');
+                try {
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    
+                    const timestamp = new Date().toLocaleString();
+                    const imageUrl = canvas.toDataURL('image/png');
+                    
+                    // Add to gallery
+                    const mediaItem = {
+                        type: 'image',
+                        url: imageUrl,
+                        camera: cameraNumber,
+                        timestamp: timestamp,
+                        size: 0.1, // Estimated size in MB
+                        blob: null
+                    };
+                    
+                    this.mediaGallery.push(mediaItem);
+                    this.stats.mediaCount++;
+                    this.stats.storageUsed += 0.1;
+                    this.updateStats();
+                    this.updateGallery();
+                    this.saveToLocalStorage();
+                    
+                    this.showNotification('Snapshot Saved', 
+                        `Snapshot from Camera ${cameraNumber} saved to gallery`, 
+                        'success');
+                    this.addLog(`Snapshot captured from Camera ${cameraNumber}`, 'info');
+                    
+                } catch (error) {
+                    this.showNotification('Snapshot Error', 'Failed to capture image', 'error');
+                    console.error('Snapshot error:', error);
+                }
             }
             
             toggleFullscreen() {
                 let element;
                 
                 if (this.multipleScreenMode) {
-                    if (this.activeCamera === 'grid') {
-                        element = document.getElementById('multiCameraGrid');
+                    if (this.currentView === 'multi' || this.activeCamera === 'grid') {
+                        element = document.getElementById('cameraCard');
+                    } else if (this.currentView === 'focused') {
+                        element = document.getElementById('focusedCameraView');
                     } else {
-                        const cameraNumber = parseInt(this.activeCamera.replace('camera', ''));
-                        element = document.getElementById(`cameraContainer${cameraNumber}`);
+                        element = document.getElementById('multiCameraGrid');
                     }
                 } else {
                     element = document.getElementById('singleCameraView');
@@ -2247,6 +2489,19 @@
                     } else if (document.msExitFullscreen) {
                         document.msExitFullscreen();
                     }
+                }
+            }
+            
+            handleFullscreenChange() {
+                const isFullscreen = document.fullscreenElement || 
+                                   document.webkitFullscreenElement || 
+                                   document.mozFullScreenElement || 
+                                   document.msFullscreenElement;
+                
+                if (isFullscreen) {
+                    document.body.classList.add('fullscreen-mode');
+                } else {
+                    document.body.classList.remove('fullscreen-mode');
                 }
             }
             
@@ -2339,28 +2594,6 @@
                     return;
                 }
                 this.lastFireDetection = now;
-                
-                // Update camera with fire alert
-                const cameraContainer = this.multipleScreenMode ? 
-                    document.getElementById(`cameraContainer${cameraNumber}`) :
-                    document.getElementById('singleCameraView');
-                
-                if (cameraContainer) {
-                    const existingAlert = cameraContainer.querySelector('.camera-fire-alert');
-                    if (!existingAlert) {
-                        const fireAlert = document.createElement('div');
-                        fireAlert.className = 'camera-fire-alert';
-                        fireAlert.innerHTML = '<i class="fas fa-fire"></i> FIRE!';
-                        cameraContainer.appendChild(fireAlert);
-                        
-                        // Remove alert after 10 seconds
-                        setTimeout(() => {
-                            if (fireAlert.parentNode) {
-                                fireAlert.remove();
-                            }
-                        }, 10000);
-                    }
-                }
                 
                 // Update fire status
                 const fireStatus = document.getElementById('fireStatus');
@@ -2486,11 +2719,6 @@
                     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
             
-            initGallery() {
-                // Initialize empty gallery
-                this.updateGallery();
-            }
-            
             updateGallery() {
                 const galleryGrid = document.getElementById('galleryGrid');
                 const emptyGallery = document.getElementById('emptyGallery');
@@ -2535,7 +2763,7 @@
                             </video>
                             <div class="gallery-item-info">
                                 <div>Camera ${item.camera} - ${item.timestamp}</div>
-                                <div>${item.size} MB</div>
+                                <div>${item.size} MB${item.duration ? ` (${item.duration}s)` : ''}</div>
                             </div>
                             <div class="gallery-item-actions">
                                 <button class="gallery-btn" onclick="app.playPauseVideo(this)" title="Play/Pause">
@@ -2578,6 +2806,11 @@
                     filename = `apula-recording-cam${mediaItem.camera}-${Date.now()}.webm`;
                 }
                 
+                if (!blob) {
+                    this.showNotification('Download Error', 'Media file not available', 'error');
+                    return;
+                }
+                
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = filename;
@@ -2595,12 +2828,13 @@
                     
                     // Update stats
                     this.stats.mediaCount--;
-                    this.stats.storageUsed -= mediaItem.size;
+                    this.stats.storageUsed -= mediaItem.size || 0;
                     
                     // Remove from gallery
                     this.mediaGallery.splice(index, 1);
                     this.updateGallery();
                     this.updateStats();
+                    this.saveToLocalStorage();
                     
                     this.showNotification('Media Deleted', 
                         'Media file removed from gallery', 
@@ -2615,12 +2849,13 @@
                     return;
                 }
                 
-                if (confirm('Clear all media from gallery?')) {
+                if (confirm('Clear all media from gallery? This cannot be undone.')) {
                     this.mediaGallery = [];
                     this.stats.mediaCount = 0;
                     this.stats.storageUsed = 0;
                     this.updateGallery();
                     this.updateStats();
+                    this.saveToLocalStorage();
                     
                     this.showNotification('Gallery Cleared', 
                         'All media files removed', 
