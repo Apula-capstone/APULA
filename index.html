@@ -1165,6 +1165,72 @@
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
+        /* Fullscreen Exit Button */
+        .exit-fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .exit-fullscreen-btn:hover {
+            background: rgba(255, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+
+        /* Connection Loading States */
+        .connection-btn.loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connection-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: loadingShine 1.5s infinite;
+        }
+
+        @keyframes loadingShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .connection-btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Multi-camera recording overlay */
+        .multi-recording-overlay {
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+            display: none;
+        }
+
         /* Responsive Design - Improved for mobile */
         @media (max-width: 1400px) {
             .dashboard-grid {
@@ -1350,6 +1416,22 @@
         body:-ms-fullscreen .card {
             padding: 20px !important;
         }
+        
+        /* Grid recording layout */
+        .grid-recording-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 5px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .grid-recording-layout video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -1357,6 +1439,12 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
+
+    <!-- Exit Fullscreen Button -->
+    <button class="exit-fullscreen-btn" id="exitFullscreenBtn">
+        <i class="fas fa-compress"></i>
+        Exit Fullscreen
+    </button>
 
     <!-- Notification Center -->
     <div class="notification-center" id="notificationCenter"></div>
@@ -1430,22 +1518,22 @@
                         Camera Connection
                     </h2>
                     <div class="connection-panel">
-                        <button class="connection-btn" onclick="connectCamera('wifi')">
+                        <button class="connection-btn" onclick="connectCamera('wifi', this)">
                             <i class="fas fa-wifi"></i>
                             <span class="btn-label">WiFi Camera</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('rtsp')">
+                        <button class="connection-btn" onclick="connectCamera('rtsp', this)">
                             <i class="fas fa-satellite-dish"></i>
                             <span class="btn-label">RTSP Stream</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('bluetooth')">
+                        <button class="connection-btn" onclick="connectCamera('bluetooth', this)">
                             <i class="fas fa-bluetooth-b"></i>
                             <span class="btn-label">Bluetooth</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('webcam')">
+                        <button class="connection-btn" onclick="connectCamera('webcam', this)">
                             <i class="fas fa-camera"></i>
                             <span class="btn-label">Webcam</span>
                         </button>
@@ -1535,6 +1623,10 @@
                             </button>
                         </div>
                         <div class="camera-label">Camera 1</div>
+                        <div class="multi-recording-overlay" id="singleRecordingOverlay">
+                            <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                            REC
+                        </div>
                     </div>
                     
                     <!-- Multi-Camera Grid (Hidden by default) -->
@@ -1551,6 +1643,10 @@
                                 </button>
                             </div>
                             <div class="camera-label">Camera 1</div>
+                            <div class="multi-recording-overlay" id="recordingOverlay1">
+                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                                REC
+                            </div>
                         </div>
                         
                         <!-- Camera 2 -->
@@ -1565,6 +1661,10 @@
                                 </button>
                             </div>
                             <div class="camera-label">Camera 2</div>
+                            <div class="multi-recording-overlay" id="recordingOverlay2">
+                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                                REC
+                            </div>
                         </div>
                         
                         <!-- Camera 3 -->
@@ -1579,6 +1679,10 @@
                                 </button>
                             </div>
                             <div class="camera-label">Camera 3</div>
+                            <div class="multi-recording-overlay" id="recordingOverlay3">
+                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                                REC
+                            </div>
                         </div>
                         
                         <!-- Camera 4 -->
@@ -1593,6 +1697,10 @@
                                 </button>
                             </div>
                             <div class="camera-label">Camera 4</div>
+                            <div class="multi-recording-overlay" id="recordingOverlay4">
+                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                                REC
+                            </div>
                         </div>
                     </div>
                     
@@ -1605,6 +1713,10 @@
                             <i class="fas fa-th-large"></i>
                             Grid View
                         </button>
+                        <div class="multi-recording-overlay" id="focusedRecordingOverlay">
+                            <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
+                            REC
+                        </div>
                     </div>
                     
                     <!-- Camera Controls -->
@@ -1621,7 +1733,7 @@
                             <i class="fas fa-camera"></i>
                             Take Snapshot
                         </button>
-                        <button class="camera-control-btn" onclick="toggleFullscreen()">
+                        <button class="camera-control-btn" onclick="toggleFullscreen()" id="fullscreenBtn">
                             <i class="fas fa-expand"></i>
                             Fullscreen
                         </button>
@@ -1783,6 +1895,26 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="setting-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="setting-label">Record Audio with Video</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="recordAudio" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="setting-label">Multi-camera Recording</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="multiCameraRecording" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1850,17 +1982,19 @@
         class APULAApp {
             constructor() {
                 this.cameras = {
-                    1: { stream: null, mediaRecorder: null, isActive: false },
-                    2: { stream: null, mediaRecorder: null, isActive: false },
-                    3: { stream: null, mediaRecorder: null, isActive: false },
-                    4: { stream: null, mediaRecorder: null, isActive: false }
+                    1: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
+                    2: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
+                    3: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
+                    4: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null }
                 };
                 this.activeCamera = 'camera1'; // Default to single camera view
                 this.currentView = 'single'; // 'single', 'multi', or 'focused'
                 this.multipleScreenMode = false; // Default to single screen
                 this.isRecording = false;
+                this.isMultiCameraRecording = false;
                 this.currentRecordingCamera = null;
                 this.recordedChunks = [];
+                this.multiRecordingChunks = [];
                 this.waterActive = false;
                 this.mediaGallery = [];
                 this.stats = {
@@ -1870,6 +2004,13 @@
                     mediaCount: 0,
                     storageUsed: 0,
                     startTime: new Date()
+                };
+                
+                this.connectionStates = {
+                    wifi: false,
+                    bluetooth: false,
+                    rtsp: false,
+                    webcam: false
                 };
                 
                 this.init();
@@ -1895,6 +2036,26 @@
                 document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('mozfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('MSFullscreenChange', this.handleFullscreenChange.bind(this));
+                
+                // Initialize canvases for multi-camera recording
+                this.initRecordingCanvases();
+            }
+            
+            initRecordingCanvases() {
+                // Create canvases for multi-camera recording
+                for (let i = 1; i <= 4; i++) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 640;
+                    canvas.height = 480;
+                    this.cameras[i].canvas = canvas;
+                    this.cameras[i].context = canvas.getContext('2d');
+                }
+                
+                // Create master canvas for grid recording
+                this.masterCanvas = document.createElement('canvas');
+                this.masterCanvas.width = 1280;
+                this.masterCanvas.height = 720;
+                this.masterContext = this.masterCanvas.getContext('2d');
             }
             
             loadFromLocalStorage() {
@@ -1939,6 +2100,18 @@
                     document.getElementById('multipleScreenToggle').checked = true;
                     setTimeout(() => this.toggleMultipleScreenMode(true), 100);
                 }
+                
+                // Load audio recording setting
+                const audioSetting = localStorage.getItem('apula_record_audio');
+                if (audioSetting !== null) {
+                    document.getElementById('recordAudio').checked = audioSetting === 'true';
+                }
+                
+                // Load multi-camera recording setting
+                const multiRecordingSetting = localStorage.getItem('apula_multi_recording');
+                if (multiRecordingSetting !== null) {
+                    document.getElementById('multiCameraRecording').checked = multiRecordingSetting === 'true';
+                }
             }
             
             saveToLocalStorage() {
@@ -1967,6 +2140,12 @@
                     
                     // Save multiple screen mode
                     localStorage.setItem('apula_multiple_screen', this.multipleScreenMode.toString());
+                    
+                    // Save audio recording setting
+                    localStorage.setItem('apula_record_audio', document.getElementById('recordAudio').checked.toString());
+                    
+                    // Save multi-camera recording setting
+                    localStorage.setItem('apula_multi_recording', document.getElementById('multiCameraRecording').checked.toString());
                     
                 } catch (e) {
                     console.error('Failed to save to localStorage:', e);
@@ -1999,6 +2178,22 @@
                         e.target.checked ? 'Enabled' : 'Disabled', 
                         'info');
                     this.addLog(`Auto-save media ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+                });
+                
+                document.getElementById('recordAudio').addEventListener('change', (e) => {
+                    this.showNotification('Audio Recording', 
+                        e.target.checked ? 'Enabled' : 'Disabled', 
+                        'info');
+                    this.addLog(`Audio recording ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+                    this.saveToLocalStorage();
+                });
+                
+                document.getElementById('multiCameraRecording').addEventListener('change', (e) => {
+                    this.showNotification('Multi-camera Recording', 
+                        e.target.checked ? 'Enabled' : 'Disabled', 
+                        'info');
+                    this.addLog(`Multi-camera recording ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
+                    this.saveToLocalStorage();
                 });
                 
                 // Add test fire detection button
@@ -2105,13 +2300,14 @@
                 this.showLoading(true);
                 
                 try {
+                    const audioEnabled = document.getElementById('recordAudio').checked;
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { 
                             width: { ideal: 1280 },
                             height: { ideal: 720 },
                             frameRate: { ideal: 30 }
                         },
-                        audio: false
+                        audio: audioEnabled
                     });
                     
                     // Set up camera feed for both single and multi views
@@ -2169,9 +2365,11 @@
             
             setupMediaRecorder(cameraNumber, stream) {
                 try {
+                    const audioEnabled = document.getElementById('recordAudio').checked;
                     const options = { 
                         mimeType: 'video/webm;codecs=vp9',
-                        videoBitsPerSecond: 2500000
+                        videoBitsPerSecond: 2500000,
+                        audioBitsPerSecond: audioEnabled ? 128000 : 0
                     };
                     
                     const mediaRecorder = new MediaRecorder(stream, options);
@@ -2190,28 +2388,87 @@
                     
                 } catch (error) {
                     console.error('MediaRecorder setup error:', error);
+                    // Try default mimeType
+                    try {
+                        const audioEnabled = document.getElementById('recordAudio').checked;
+                        const mediaRecorder = new MediaRecorder(stream, {
+                            videoBitsPerSecond: 2500000,
+                            audioBitsPerSecond: audioEnabled ? 128000 : 0
+                        });
+                        
+                        mediaRecorder.ondataavailable = (event) => {
+                            if (event.data.size > 0) {
+                                this.recordedChunks.push(event.data);
+                            }
+                        };
+                        
+                        mediaRecorder.onstop = () => {
+                            this.saveRecording(cameraNumber);
+                        };
+                        
+                        this.cameras[cameraNumber].mediaRecorder = mediaRecorder;
+                    } catch (e) {
+                        console.error('Failed to setup MediaRecorder:', e);
+                    }
                 }
             }
             
-            async connectCamera(type) {
+            async connectCamera(type, button) {
+                // Show loading state
+                button.classList.add('loading');
+                button.disabled = true;
+                
                 if (type === 'bluetooth') {
                     this.showNotification('Bluetooth Connection', 
                         'Searching for Bluetooth cameras...', 
                         'info');
                     this.addLog('Initiating Bluetooth camera connection', 'info');
                     
-                    // Simulate Bluetooth connection
+                    // Simulate Bluetooth connection with loading
                     setTimeout(() => {
+                        this.connectionStates.bluetooth = true;
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        button.innerHTML = `<i class="fas fa-check-circle"></i><span class="btn-label">Connected</span>`;
+                        button.style.borderColor = 'var(--neon-green)';
+                        
                         this.showNotification('Bluetooth Connected', 
                             'Bluetooth camera connected successfully', 
                             'success');
                         this.addLog('Bluetooth camera connected successfully', 'info');
-                    }, 1500);
+                    }, 3000);
+                    
+                } else if (type === 'wifi') {
+                    this.showNotification('WiFi Connection', 
+                        'Connecting to WiFi camera...', 
+                        'info');
+                    this.addLog('Initiating WiFi camera connection', 'info');
+                    
+                    // Simulate WiFi connection with loading
+                    setTimeout(() => {
+                        this.connectionStates.wifi = true;
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                        button.innerHTML = `<i class="fas fa-check-circle"></i><span class="btn-label">Connected</span>`;
+                        button.style.borderColor = 'var(--neon-green)';
+                        
+                        this.showNotification('WiFi Connected', 
+                            'WiFi camera connected successfully', 
+                            'success');
+                        this.addLog('WiFi camera connected successfully', 'info');
+                    }, 2500);
+                    
                 } else {
                     this.showNotification('Camera Connection', 
                         `Use "Add Camera" button to connect a ${type} camera`, 
                         'info');
                     this.addLog(`Camera connection type selected: ${type}`, 'info');
+                    
+                    // Reset button after short delay
+                    setTimeout(() => {
+                        button.classList.remove('loading');
+                        button.disabled = false;
+                    }, 1000);
                 }
             }
             
@@ -2276,6 +2533,18 @@
                     return;
                 }
                 
+                const multiCameraRecordingEnabled = document.getElementById('multiCameraRecording').checked;
+                
+                if (this.multipleScreenMode && multiCameraRecordingEnabled && this.stats.activeCameras > 1) {
+                    // Start multi-camera recording
+                    this.startMultiCameraRecording();
+                } else {
+                    // Start single camera recording
+                    this.startSingleCameraRecording();
+                }
+            }
+            
+            startSingleCameraRecording() {
                 // Determine which camera to record from
                 let cameraNumber;
                 
@@ -2314,6 +2583,17 @@
                 document.getElementById('recordBtn').classList.add('disabled');
                 document.getElementById('stopBtn').classList.remove('disabled');
                 
+                // Show recording indicator
+                if (this.multipleScreenMode) {
+                    if (this.currentView === 'focused') {
+                        document.getElementById('focusedRecordingOverlay').style.display = 'block';
+                    } else {
+                        document.getElementById(`recordingOverlay${cameraNumber}`).style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('singleRecordingOverlay').style.display = 'block';
+                }
+                
                 this.showNotification('Recording Started', 
                     `Recording from Camera ${cameraNumber}`, 
                     'success');
@@ -2325,6 +2605,97 @@
                 this.updateStats();
             }
             
+            startMultiCameraRecording() {
+                this.isMultiCameraRecording = true;
+                this.isRecording = true;
+                this.multiRecordingChunks = [];
+                
+                // Start recording from all active cameras
+                const activeCameras = [];
+                for (let i = 1; i <= 4; i++) {
+                    if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
+                        activeCameras.push(i);
+                        const mediaRecorder = this.cameras[i].mediaRecorder;
+                        mediaRecorder.start(1000);
+                        
+                        // Show recording indicator for each camera
+                        document.getElementById(`recordingOverlay${i}`).style.display = 'block';
+                    }
+                }
+                
+                // Update UI
+                document.getElementById('recordBtn').classList.add('disabled');
+                document.getElementById('stopBtn').classList.remove('disabled');
+                
+                this.showNotification('Multi-camera Recording Started', 
+                    `Recording from ${activeCameras.length} cameras`, 
+                    'success');
+                this.addLog(`Multi-camera recording started from cameras: ${activeCameras.join(', ')}`, 'info');
+                this.updateRecordingStatus('recording');
+                
+                // Start capturing grid layout
+                this.startGridCapture();
+            }
+            
+            startGridCapture() {
+                // Capture frames from all active cameras and combine them into a grid
+                this.gridCaptureInterval = setInterval(() => {
+                    this.captureGridFrame();
+                }, 100); // Capture at 10fps for grid view
+            }
+            
+            captureGridFrame() {
+                // Clear master canvas
+                this.masterContext.fillStyle = '#000000';
+                this.masterContext.fillRect(0, 0, this.masterCanvas.width, this.masterCanvas.height);
+                
+                const cellWidth = this.masterCanvas.width / 2;
+                const cellHeight = this.masterCanvas.height / 2;
+                
+                // Draw each camera feed in its grid position
+                for (let i = 1; i <= 4; i++) {
+                    if (this.cameras[i].isActive && this.cameras[i].stream) {
+                        const videoElement = document.getElementById(i === 1 ? 'cameraFeed1multi' : `cameraFeed${i}`);
+                        if (videoElement && videoElement.readyState >= videoElement.HAVE_CURRENT_DATA) {
+                            // Draw camera feed to individual canvas
+                            const canvas = this.cameras[i].canvas;
+                            const context = this.cameras[i].context;
+                            
+                            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                            
+                            // Calculate grid position
+                            const row = Math.floor((i - 1) / 2);
+                            const col = (i - 1) % 2;
+                            const x = col * cellWidth;
+                            const y = row * cellHeight;
+                            
+                            // Draw to master canvas
+                            this.masterContext.drawImage(canvas, x, y, cellWidth, cellHeight);
+                            
+                            // Draw camera label
+                            this.masterContext.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                            this.masterContext.fillRect(x + 5, y + 5, 80, 25);
+                            this.masterContext.fillStyle = 'white';
+                            this.masterContext.font = '14px Montserrat';
+                            this.masterContext.fillText(`Camera ${i}`, x + 10, y + 22);
+                            
+                            // Draw recording indicator
+                            this.masterContext.fillStyle = 'rgba(255, 68, 68, 0.9)';
+                            this.masterContext.fillRect(x + cellWidth - 60, y + 5, 55, 25);
+                            this.masterContext.fillStyle = 'white';
+                            this.masterContext.fillText('REC', x + cellWidth - 50, y + 22);
+                        }
+                    }
+                }
+                
+                // Convert canvas to blob and add to chunks
+                this.masterCanvas.toBlob((blob) => {
+                    if (blob) {
+                        this.multiRecordingChunks.push(blob);
+                    }
+                }, 'image/jpeg', 0.8);
+            }
+            
             stopRecording() {
                 if (!this.isRecording) {
                     return;
@@ -2332,10 +2703,12 @@
                 
                 this.isRecording = false;
                 
-                // Stop recording
-                if (this.currentRecordingCamera && this.cameras[this.currentRecordingCamera].mediaRecorder) {
-                    const mediaRecorder = this.cameras[this.currentRecordingCamera].mediaRecorder;
-                    mediaRecorder.stop();
+                if (this.isMultiCameraRecording) {
+                    // Stop multi-camera recording
+                    this.stopMultiCameraRecording();
+                } else {
+                    // Stop single camera recording
+                    this.stopSingleCameraRecording();
                 }
                 
                 // Update UI
@@ -2346,6 +2719,46 @@
                     'Recording saved to gallery', 
                     'info');
                 this.updateRecordingStatus('stopped');
+            }
+            
+            stopSingleCameraRecording() {
+                // Stop recording
+                if (this.currentRecordingCamera && this.cameras[this.currentRecordingCamera].mediaRecorder) {
+                    const mediaRecorder = this.cameras[this.currentRecordingCamera].mediaRecorder;
+                    mediaRecorder.stop();
+                }
+                
+                // Hide recording indicators
+                if (this.multipleScreenMode) {
+                    if (this.currentView === 'focused') {
+                        document.getElementById('focusedRecordingOverlay').style.display = 'none';
+                    } else if (this.currentRecordingCamera) {
+                        document.getElementById(`recordingOverlay${this.currentRecordingCamera}`).style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('singleRecordingOverlay').style.display = 'none';
+                }
+            }
+            
+            stopMultiCameraRecording() {
+                this.isMultiCameraRecording = false;
+                
+                // Stop all camera recordings
+                for (let i = 1; i <= 4; i++) {
+                    if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
+                        const mediaRecorder = this.cameras[i].mediaRecorder;
+                        mediaRecorder.stop();
+                        document.getElementById(`recordingOverlay${i}`).style.display = 'none';
+                    }
+                }
+                
+                // Stop grid capture
+                if (this.gridCaptureInterval) {
+                    clearInterval(this.gridCaptureInterval);
+                }
+                
+                // Save grid recording
+                this.saveGridRecording();
             }
             
             saveRecording(cameraNumber) {
@@ -2383,6 +2796,40 @@
                     
                     this.addLog(`Recording saved from Camera ${cameraNumber} (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
                 };
+            }
+            
+            saveGridRecording() {
+                if (this.multiRecordingChunks.length === 0) return;
+                
+                // Create a video from the image sequence
+                // Note: In a real implementation, you would use a proper video encoder
+                // For this demo, we'll create a simple representation
+                
+                const sizeMB = Math.round(this.multiRecordingChunks.length * 0.05 * 100) / 100; // Estimate size
+                const timestamp = new Date().toLocaleString();
+                
+                // For demo purposes, create a mock video item
+                const mediaItem = {
+                    type: 'video',
+                    url: '#', // Would be a real video URL in production
+                    camera: 'grid',
+                    timestamp: timestamp,
+                    size: sizeMB,
+                    blob: null,
+                    duration: Math.round(this.multiRecordingChunks.length / 10) // 10fps
+                };
+                
+                this.mediaGallery.push(mediaItem);
+                this.stats.mediaCount++;
+                this.stats.storageUsed += sizeMB;
+                this.updateStats();
+                this.updateGallery();
+                this.saveToLocalStorage();
+                
+                this.addLog(`Multi-camera grid recording saved (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
+                
+                // Clear chunks
+                this.multiRecordingChunks = [];
             }
             
             captureSnapshot() {
@@ -2479,6 +2926,10 @@
                     } else if (element.msRequestFullscreen) {
                         element.msRequestFullscreen();
                     }
+                    
+                    // Update button text
+                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-compress"></i>Exit Fullscreen';
+                    
                 } else {
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
@@ -2489,6 +2940,9 @@
                     } else if (document.msExitFullscreen) {
                         document.msExitFullscreen();
                     }
+                    
+                    // Update button text
+                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-expand"></i>Fullscreen';
                 }
             }
             
@@ -2500,8 +2954,11 @@
                 
                 if (isFullscreen) {
                     document.body.classList.add('fullscreen-mode');
+                    document.getElementById('exitFullscreenBtn').style.display = 'flex';
                 } else {
                     document.body.classList.remove('fullscreen-mode');
+                    document.getElementById('exitFullscreenBtn').style.display = 'none';
+                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-expand"></i>Fullscreen';
                 }
             }
             
@@ -3041,7 +3498,7 @@
         window.app = new APULAApp();
         
         // Make functions globally available
-        window.connectCamera = (type) => app.connectCamera(type);
+        window.connectCamera = (type, button) => app.connectCamera(type, button);
         window.addCamera = (num) => app.addCamera(num);
         window.startRecording = () => app.startRecording();
         window.stopRecording = () => app.stopRecording();
@@ -3057,6 +3514,22 @@
         window.closeFireAlert = () => app.closeFireAlert();
         window.clearLogs = () => app.clearLogs();
         window.clearGallery = () => app.clearGallery();
+        
+        // Exit fullscreen function
+        window.exitFullscreen = () => {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        };
+        
+        // Bind exit fullscreen button
+        document.getElementById('exitFullscreenBtn').addEventListener('click', exitFullscreen);
     </script>
 </body>
 </html>
