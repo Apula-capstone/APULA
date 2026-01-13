@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APULA - Smart Fire Detection & Prevention System</title>
+    <title>APULA - Live Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -175,12 +175,44 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* Enhanced Dashboard Grid */
+        /* Enhanced Dashboard Grid - Responsive */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
+        }
+
+        /* For mobile devices */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+        }
+
+        /* For tablet devices */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         /* Enhanced Card Styles */
@@ -238,8 +270,14 @@
         /* Enhanced Status Cards */
         .status-cards {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .status-cards {
+                grid-template-columns: 1fr;
+            }
         }
 
         .status-card {
@@ -318,6 +356,7 @@
 
         /* Single Camera Feed */
         .single-camera-feed {
+            width: 100%;
             height: 400px;
             position: relative;
             border-radius: var(--border-radius);
@@ -328,34 +367,20 @@
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
+        /* Responsive camera feed */
+        @media (max-width: 768px) {
+            .single-camera-feed {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .single-camera-feed {
+                height: 250px;
+            }
+        }
+
         .single-camera-feed video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        /* Multi-Camera Feed */
-        .multi-camera-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 10px;
-            height: 500px;
-            margin-bottom: 25px;
-            display: none; /* Hidden by default */
-        }
-
-        .camera-feed-container {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            border: 2px solid rgba(255, 107, 53, 0.2);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .camera-feed {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -387,10 +412,9 @@
             opacity: 0.5;
         }
 
-        .camera-placeholder p {
-            color: var(--text-dim);
-            font-size: 1rem;
-            opacity: 0.7;
+        @keyframes move {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
         }
 
         .camera-label {
@@ -420,47 +444,24 @@
             animation: pulse 1s infinite;
         }
 
-        /* Camera View Controls */
-        .camera-view-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .view-control-btn {
-            padding: 12px 20px;
-            border: 2px solid var(--primary-orange);
-            background: rgba(255, 107, 53, 0.1);
-            color: var(--text-light);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 120px;
-            justify-content: center;
-        }
-
-        .view-control-btn:hover {
-            background: rgba(255, 107, 53, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .view-control-btn.active {
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
-            border-color: var(--primary-red);
-        }
-
-        /* Enhanced Camera Controls */
+        /* Enhanced Camera Controls - Responsive */
         .camera-controls {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .camera-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .camera-controls {
+                grid-template-columns: 1fr;
+            }
         }
 
         .camera-control-btn {
@@ -513,69 +514,52 @@
             font-size: 1.4rem;
         }
 
-        /* Individual Camera Snapshot Buttons */
-        .individual-snapshot-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-            display: none; /* Hidden by default */
-        }
-
-        .cam-snap-btn {
-            padding: 12px;
-            border: 2px solid var(--electric-blue);
-            background: rgba(0, 180, 216, 0.1);
-            color: var(--text-light);
-            border-radius: 8px;
+        /* Fullscreen Exit Button */
+        .fullscreen-exit-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 53, 0.9);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-
-        .cam-snap-btn:hover {
-            background: rgba(0, 180, 216, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .cam-snap-btn i {
-            font-size: 1.2rem;
-        }
-
-        /* Add Camera Button */
-        .add-camera-btn {
-            padding: 15px;
-            border: 2px dashed var(--electric-blue);
-            background: rgba(0, 180, 216, 0.1);
-            color: var(--electric-blue);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            z-index: 9999;
+            display: none;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-size: 1rem;
-            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.5);
+            transition: all 0.3s ease;
         }
 
-        .add-camera-btn:hover {
-            background: rgba(0, 180, 216, 0.2);
-            border-color: var(--neon-green);
-            color: var(--neon-green);
+        .fullscreen-exit-btn:hover {
+            background: rgba(255, 68, 68, 0.9);
+            transform: scale(1.1);
         }
 
-        /* Enhanced Water Control */
+        body:fullscreen .fullscreen-exit-btn,
+        body:-webkit-full-screen .fullscreen-exit-btn,
+        body:-moz-full-screen .fullscreen-exit-btn,
+        body:-ms-fullscreen .fullscreen-exit-btn {
+            display: flex;
+        }
+
+        /* Enhanced Water Control - Responsive */
         .water-control {
             display: flex;
             align-items: center;
             gap: 25px;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .water-control {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
 
         .pressure-slider-container {
@@ -622,10 +606,10 @@
             50% { text-shadow: 0 0 20px rgba(0, 180, 216, 0.8); }
         }
 
-        /* Enhanced Connection Panel */
+        /* Enhanced Connection Panel - Responsive */
         .connection-panel {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
@@ -681,7 +665,7 @@
             opacity: 0.9;
         }
 
-        /* Gallery Styles */
+        /* Gallery Styles - Responsive */
         .gallery-container {
             height: 300px;
             overflow-y: auto;
@@ -696,6 +680,13 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
         }
 
         .gallery-item {
@@ -720,43 +711,6 @@
             object-fit: cover;
         }
 
-        .gallery-item-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            color: white;
-            font-size: 0.8rem;
-        }
-
-        .gallery-item-actions {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .gallery-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .gallery-btn:hover {
-            background: rgba(255, 107, 53, 0.8);
-        }
-
         /* Enhanced Logs Container */
         .log-container {
             height: 220px;
@@ -777,6 +731,18 @@
             align-items: center;
             gap: 15px;
             transition: background 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .log-entry {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .log-time {
+                min-width: auto !important;
+            }
         }
 
         .log-entry:hover {
@@ -882,10 +848,10 @@
             background-color: white;
         }
 
-        /* Enhanced Stats */
+        /* Enhanced Stats - Responsive */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -946,6 +912,16 @@
             animation: alertShake 0.5s ease;
         }
 
+        @media (max-width: 768px) {
+            .fire-alert-content {
+                padding: 30px 20px;
+            }
+            
+            .fire-alert-content h2 {
+                font-size: 2.5rem !important;
+            }
+        }
+
         @keyframes alertShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
@@ -991,6 +967,13 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .alert-acknowledge-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
         }
 
         .alert-acknowledge-btn:hover {
@@ -1063,6 +1046,14 @@
             right: 20px;
             z-index: 1000;
             max-width: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .notification-center {
+                max-width: 90%;
+                left: 5%;
+                right: 5%;
+            }
         }
 
         .notification {
@@ -1152,285 +1143,38 @@
             }
         }
 
-        /* Focused Camera View */
-        .focused-camera-view {
-            display: none;
-            position: relative;
-            height: 500px;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 25px;
-            border: 2px solid rgba(255, 107, 53, 0.2);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Fullscreen Exit Button */
-        .exit-fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: rgba(255, 68, 68, 0.9);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .exit-fullscreen-btn:hover {
-            background: rgba(255, 68, 68, 1);
-            transform: translateY(-2px);
-        }
-
-        /* Connection Loading States */
-        .connection-btn.loading {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .connection-btn.loading::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: loadingShine 1.5s infinite;
-        }
-
-        @keyframes loadingShine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .connection-btn.loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        /* Multi-camera recording overlay */
-        .multi-recording-overlay {
-            position: absolute;
-            top: 10px;
-            right: 50px;
-            background: rgba(255, 68, 68, 0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 10;
-            display: none;
-        }
-
-        /* Responsive Design - Improved for mobile */
-        @media (max-width: 1400px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .dashboard-grid {
-                gap: 20px;
-            }
-            
-            .camera-controls {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .connection-panel {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .status-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            .logo {
-                font-size: 3.5rem;
-            }
-            
-            .logo-icon {
-                font-size: 3rem;
-            }
-            
-            .water-control {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .fire-alert-content {
-                padding: 30px 20px;
-            }
-            
-            .fire-alert-content h2 {
-                font-size: 2.5rem;
-            }
-            
-            .multi-camera-grid {
-                height: 400px;
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(4, 1fr);
-            }
-            
-            .camera-view-controls {
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-items: center;
-            }
-            
-            .view-control-btn {
-                min-width: 100px;
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .single-camera-feed {
-                height: 300px;
-            }
-            
-            .focused-camera-view {
-                height: 350px;
-            }
-            
-            .individual-snapshot-buttons {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .cam-snap-btn {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 2.8rem;
-            }
-            
-            .tagline {
-                font-size: 1.1rem;
-            }
-            
-            .multi-camera-grid {
-                height: 350px;
-            }
-            
-            .camera-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .connection-panel {
-                grid-template-columns: 1fr;
-            }
-            
-            .camera-view-controls {
-                gap: 5px;
-            }
-            
-            .view-control-btn {
-                min-width: 80px;
-                padding: 8px 10px;
-                font-size: 0.8rem;
-            }
-            
-            .single-camera-feed {
-                height: 250px;
-            }
-            
-            .focused-camera-view {
-                height: 300px;
-            }
-            
-            .individual-snapshot-buttons {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Additional styles */
+        /* Column Layout for Desktop */
         .column {
             display: flex;
             flex-direction: column;
             gap: 30px;
         }
-        
-        /* Fullscreen styles */
-        .fullscreen-mode .multi-camera-grid {
-            height: calc(100vh - 100px) !important;
-            gap: 5px;
-        }
-        
-        .fullscreen-mode .focused-camera-view {
-            height: calc(100vh - 100px) !important;
-        }
-        
-        .fullscreen-mode .single-camera-feed {
-            height: calc(100vh - 100px) !important;
-        }
-        
-        /* Hide elements in fullscreen */
-        body:fullscreen .container,
-        body:-webkit-full-screen .container,
-        body:-moz-full-screen .container,
-        body:-ms-fullscreen .container {
-            padding: 10px !important;
-        }
-        
-        body:fullscreen .header,
-        body:-webkit-full-screen .header,
-        body:-moz-full-screen .header,
-        body:-ms-fullscreen .header {
+
+        /* Remove multiple camera styles */
+        .multi-camera-grid,
+        .camera-view-controls,
+        .individual-snapshot-buttons,
+        .focused-camera-view {
             display: none !important;
         }
-        
-        body:fullscreen .card-title,
-        body:-webkit-full-screen .card-title,
-        body:-moz-full-screen .card-title,
-        body:-ms-fullscreen .card-title {
-            font-size: 1.2rem !important;
-            margin-bottom: 15px !important;
-        }
-        
-        body:fullscreen .card,
-        body:-webkit-full-screen .card,
-        body:-moz-full-screen .card,
-        body:-ms-fullscreen .card {
-            padding: 20px !important;
-        }
-        
-        /* Grid recording layout */
-        .grid-recording-layout {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 5px;
+
+        /* Stream URL Input */
+        #streamUrl {
             width: 100%;
-            height: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            background: rgba(255, 107, 53, 0.05);
+            color: white;
+            font-size: 0.95rem;
+            margin-top: 15px;
         }
-        
-        .grid-recording-layout video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        @media (max-width: 768px) {
+            #streamUrl {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -1440,17 +1184,16 @@
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- Exit Fullscreen Button -->
-    <button class="exit-fullscreen-btn" id="exitFullscreenBtn">
-        <i class="fas fa-compress"></i>
-        Exit Fullscreen
-    </button>
-
     <!-- Notification Center -->
     <div class="notification-center" id="notificationCenter"></div>
 
     <!-- Water Spray Effect -->
     <div class="water-spray-effect" id="waterSprayEffect"></div>
+
+    <!-- Fullscreen Exit Button -->
+    <button class="fullscreen-exit-btn" onclick="exitFullscreen()" title="Exit Fullscreen">
+        <i class="fas fa-times"></i>
+    </button>
 
     <div class="container">
         <!-- Enhanced Header -->
@@ -1497,8 +1240,8 @@
                             <div class="status-icon">
                                 <i class="fas fa-video"></i>
                             </div>
-                            <div class="status-text">CAMERAS OFFLINE</div>
-                            <div class="status-subtext">0 of 4 Connected</div>
+                            <div class="status-text">CAMERA OFFLINE</div>
+                            <div class="status-subtext">Single Camera System</div>
                         </div>
 
                         <div class="status-card" id="recordingStatus">
@@ -1518,34 +1261,30 @@
                         Camera Connection
                     </h2>
                     <div class="connection-panel">
-                        <button class="connection-btn" onclick="connectCamera('wifi', this)">
+                        <button class="connection-btn" onclick="connectCamera('wifi')">
                             <i class="fas fa-wifi"></i>
                             <span class="btn-label">WiFi Camera</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('rtsp', this)">
+                        <button class="connection-btn" onclick="connectCamera('rtsp')">
                             <i class="fas fa-satellite-dish"></i>
                             <span class="btn-label">RTSP Stream</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('bluetooth', this)">
+                        <button class="connection-btn" onclick="connectCamera('bluetooth')">
                             <i class="fas fa-bluetooth-b"></i>
                             <span class="btn-label">Bluetooth</span>
                         </button>
 
-                        <button class="connection-btn" onclick="connectCamera('webcam', this)">
+                        <button class="connection-btn" onclick="connectCamera('webcam')">
                             <i class="fas fa-camera"></i>
                             <span class="btn-label">Webcam</span>
                         </button>
                     </div>
                     
-                    <div style="margin-top: 20px;">
+                    <div style="margin-top: 15px;">
                         <input type="text" id="streamUrl" 
-                               placeholder="Enter RTSP URL (e.g., rtsp://username:password@192.168.1.100:554/stream)" 
-                               style="width: 100%; padding: 15px; border-radius: 10px; 
-                                      border: 1px solid rgba(255, 107, 53, 0.3); 
-                                      background: rgba(255, 107, 53, 0.05); 
-                                      color: white; font-size: 0.95rem;">
+                               placeholder="Enter RTSP URL (e.g., rtsp://username:password@192.168.1.100:554/stream)">
                     </div>
                 </div>
 
@@ -1583,140 +1322,22 @@
                         Live Camera Feed
                         <span class="live-indicator">
                             <span class="live-dot"></span>
-                            <span style="font-size: 0.8rem;" id="cameraModeText">SINGLE CAMERA</span>
+                            <span style="font-size: 0.8rem;">SINGLE CAMERA</span>
                         </span>
                     </h2>
                     
-                    <!-- Camera View Controls (Hidden by default) -->
-                    <div class="camera-view-controls" id="cameraViewControls" style="display: none;">
-                        <button class="view-control-btn active" onclick="changeCameraView('grid')" id="gridViewBtn">
-                            <i class="fas fa-th-large"></i>
-                            Grid View
-                        </button>
-                        <button class="view-control-btn" onclick="changeCameraView('camera1')" id="camera1ViewBtn">
-                            <i class="fas fa-camera"></i>
-                            Camera 1
-                        </button>
-                        <button class="view-control-btn" onclick="changeCameraView('camera2')" id="camera2ViewBtn">
-                            <i class="fas fa-camera"></i>
-                            Camera 2
-                        </button>
-                        <button class="view-control-btn" onclick="changeCameraView('camera3')" id="camera3ViewBtn">
-                            <i class="fas fa-camera"></i>
-                            Camera 3
-                        </button>
-                        <button class="view-control-btn" onclick="changeCameraView('camera4')" id="camera4ViewBtn">
-                            <i class="fas fa-camera"></i>
-                            Camera 4
-                        </button>
-                    </div>
-                    
-                    <!-- Single Camera View (Default) -->
+                    <!-- Single Camera View -->
                     <div class="single-camera-feed" id="singleCameraView">
                         <video id="cameraFeed1" autoplay playsinline muted></video>
                         <div class="camera-placeholder" id="cameraPlaceholder1">
                             <i class="fas fa-camera"></i>
                             <p>Camera 1</p>
-                            <button class="add-camera-btn" onclick="addCamera(1)">
+                            <button class="camera-control-btn" onclick="addCamera(1)" style="width: 200px; margin-top: 20px;">
                                 <i class="fas fa-plus"></i>
-                                Add Camera
+                                Connect Camera
                             </button>
                         </div>
                         <div class="camera-label">Camera 1</div>
-                        <div class="multi-recording-overlay" id="singleRecordingOverlay">
-                            <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                            REC
-                        </div>
-                    </div>
-                    
-                    <!-- Multi-Camera Grid (Hidden by default) -->
-                    <div class="multi-camera-grid" id="multiCameraGrid">
-                        <!-- Camera 1 -->
-                        <div class="camera-feed-container" id="cameraContainer1">
-                            <video class="camera-feed" id="cameraFeed1multi" autoplay playsinline muted></video>
-                            <div class="camera-placeholder" id="cameraPlaceholder1multi">
-                                <i class="fas fa-camera"></i>
-                                <p>Camera 1</p>
-                                <button class="add-camera-btn" onclick="addCamera(1)">
-                                    <i class="fas fa-plus"></i>
-                                    Add Camera 1
-                                </button>
-                            </div>
-                            <div class="camera-label">Camera 1</div>
-                            <div class="multi-recording-overlay" id="recordingOverlay1">
-                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                                REC
-                            </div>
-                        </div>
-                        
-                        <!-- Camera 2 -->
-                        <div class="camera-feed-container" id="cameraContainer2">
-                            <video class="camera-feed" id="cameraFeed2" autoplay playsinline muted></video>
-                            <div class="camera-placeholder" id="cameraPlaceholder2">
-                                <i class="fas fa-camera"></i>
-                                <p>Camera 2</p>
-                                <button class="add-camera-btn" onclick="addCamera(2)">
-                                    <i class="fas fa-plus"></i>
-                                    Add Camera 2
-                                </button>
-                            </div>
-                            <div class="camera-label">Camera 2</div>
-                            <div class="multi-recording-overlay" id="recordingOverlay2">
-                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                                REC
-                            </div>
-                        </div>
-                        
-                        <!-- Camera 3 -->
-                        <div class="camera-feed-container" id="cameraContainer3">
-                            <video class="camera-feed" id="cameraFeed3" autoplay playsinline muted></video>
-                            <div class="camera-placeholder" id="cameraPlaceholder3">
-                                <i class="fas fa-camera"></i>
-                                <p>Camera 3</p>
-                                <button class="add-camera-btn" onclick="addCamera(3)">
-                                    <i class="fas fa-plus"></i>
-                                    Add Camera 3
-                                </button>
-                            </div>
-                            <div class="camera-label">Camera 3</div>
-                            <div class="multi-recording-overlay" id="recordingOverlay3">
-                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                                REC
-                            </div>
-                        </div>
-                        
-                        <!-- Camera 4 -->
-                        <div class="camera-feed-container" id="cameraContainer4">
-                            <video class="camera-feed" id="cameraFeed4" autoplay playsinline muted></video>
-                            <div class="camera-placeholder" id="cameraPlaceholder4">
-                                <i class="fas fa-camera"></i>
-                                <p>Camera 4</p>
-                                <button class="add-camera-btn" onclick="addCamera(4)">
-                                    <i class="fas fa-plus"></i>
-                                    Add Camera 4
-                                </button>
-                            </div>
-                            <div class="camera-label">Camera 4</div>
-                            <div class="multi-recording-overlay" id="recordingOverlay4">
-                                <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                                REC
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Focused Camera View (Hidden by default) -->
-                    <div class="focused-camera-view" id="focusedCameraView">
-                        <video id="focusedCameraFeed" autoplay playsinline muted></video>
-                        <div class="camera-label" id="focusedCameraLabel">Camera 1</div>
-                        <button class="view-control-btn" onclick="changeCameraView('grid')" 
-                                style="position: absolute; top: 10px; right: 10px; padding: 10px 15px; z-index: 10;">
-                            <i class="fas fa-th-large"></i>
-                            Grid View
-                        </button>
-                        <div class="multi-recording-overlay" id="focusedRecordingOverlay">
-                            <i class="fas fa-circle" style="color: var(--primary-red); margin-right: 5px;"></i>
-                            REC
-                        </div>
                     </div>
                     
                     <!-- Camera Controls -->
@@ -1733,29 +1354,9 @@
                             <i class="fas fa-camera"></i>
                             Take Snapshot
                         </button>
-                        <button class="camera-control-btn" onclick="toggleFullscreen()" id="fullscreenBtn">
+                        <button class="camera-control-btn" onclick="toggleFullscreen()">
                             <i class="fas fa-expand"></i>
                             Fullscreen
-                        </button>
-                    </div>
-                    
-                    <!-- Individual Camera Snapshot Buttons (Hidden by default) -->
-                    <div class="individual-snapshot-buttons" id="individualSnapshotButtons">
-                        <button class="cam-snap-btn" onclick="captureSnapshotFromCamera(1)">
-                            <i class="fas fa-camera"></i>
-                            Cam 1 Snap
-                        </button>
-                        <button class="cam-snap-btn" onclick="captureSnapshotFromCamera(2)">
-                            <i class="fas fa-camera"></i>
-                            Cam 2 Snap
-                        </button>
-                        <button class="cam-snap-btn" onclick="captureSnapshotFromCamera(3)">
-                            <i class="fas fa-camera"></i>
-                            Cam 3 Snap
-                        </button>
-                        <button class="cam-snap-btn" onclick="captureSnapshotFromCamera(4)">
-                            <i class="fas fa-camera"></i>
-                            Cam 4 Snap
                         </button>
                     </div>
                 </div>
@@ -1833,7 +1434,7 @@
                         </div>
                         <div class="log-entry">
                             <span class="log-time">00:00:03</span>
-                            <span class="log-message">Click "Add Camera" to connect camera</span>
+                            <span class="log-message">Click "Connect Camera" to connect camera</span>
                         </div>
                     </div>
                 </div>
@@ -1846,16 +1447,6 @@
                     </h2>
                     
                     <div class="settings-controls">
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Multiple Screen Mode</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="multipleScreenToggle">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="setting-item">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label class="setting-label">Auto Water Activation</label>
@@ -1895,26 +1486,6 @@
                                 </label>
                             </div>
                         </div>
-
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Record Audio with Video</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="recordAudio" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Multi-camera Recording</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="multiCameraRecording" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -1928,7 +1499,7 @@
                     <div class="stats-grid">
                         <div class="stat-item">
                             <span class="stat-label">Active Cameras</span>
-                            <span class="stat-value" id="statCameras">0/4</span>
+                            <span class="stat-value" id="statCameras">0/1</span>
                         </div>
                         
                         <div class="stat-item">
@@ -1978,23 +1549,12 @@
     </div>
 
     <script>
-        // Enhanced APULA Application with Multiple Cameras and Local Storage
+        // Simplified APULA Application with Single Camera
         class APULAApp {
             constructor() {
-                this.cameras = {
-                    1: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
-                    2: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
-                    3: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null },
-                    4: { stream: null, mediaRecorder: null, isActive: false, canvas: null, context: null }
-                };
-                this.activeCamera = 'camera1'; // Default to single camera view
-                this.currentView = 'single'; // 'single', 'multi', or 'focused'
-                this.multipleScreenMode = false; // Default to single screen
+                this.camera = { stream: null, mediaRecorder: null, isActive: false };
                 this.isRecording = false;
-                this.isMultiCameraRecording = false;
-                this.currentRecordingCamera = null;
                 this.recordedChunks = [];
-                this.multiRecordingChunks = [];
                 this.waterActive = false;
                 this.mediaGallery = [];
                 this.stats = {
@@ -2004,13 +1564,6 @@
                     mediaCount: 0,
                     storageUsed: 0,
                     startTime: new Date()
-                };
-                
-                this.connectionStates = {
-                    wifi: false,
-                    bluetooth: false,
-                    rtsp: false,
-                    webcam: false
                 };
                 
                 this.init();
@@ -2025,37 +1578,11 @@
                 this.showNotification('System Initialized', 'APULA single camera mode active', 'info');
                 this.addLog('System initialized with single camera mode', 'info');
                 
-                // Set up multiple screen toggle
-                const multipleScreenToggle = document.getElementById('multipleScreenToggle');
-                multipleScreenToggle.addEventListener('change', (e) => {
-                    this.toggleMultipleScreenMode(e.target.checked);
-                });
-                
                 // Listen for fullscreen changes
                 document.addEventListener('fullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('mozfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('MSFullscreenChange', this.handleFullscreenChange.bind(this));
-                
-                // Initialize canvases for multi-camera recording
-                this.initRecordingCanvases();
-            }
-            
-            initRecordingCanvases() {
-                // Create canvases for multi-camera recording
-                for (let i = 1; i <= 4; i++) {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 640;
-                    canvas.height = 480;
-                    this.cameras[i].canvas = canvas;
-                    this.cameras[i].context = canvas.getContext('2d');
-                }
-                
-                // Create master canvas for grid recording
-                this.masterCanvas = document.createElement('canvas');
-                this.masterCanvas.width = 1280;
-                this.masterCanvas.height = 720;
-                this.masterContext = this.masterCanvas.getContext('2d');
             }
             
             loadFromLocalStorage() {
@@ -2064,15 +1591,6 @@
                 if (savedGallery) {
                     try {
                         this.mediaGallery = JSON.parse(savedGallery);
-                        this.mediaGallery.forEach(item => {
-                            if (item.type === 'image') {
-                                // Images are stored as base64 in localStorage
-                                // Already properly saved
-                            } else if (item.type === 'video') {
-                                // Videos need to be recreated from blob URLs
-                                // We'll handle this when displaying
-                            }
-                        });
                         this.addLog('Loaded gallery from local storage', 'info');
                     } catch (e) {
                         console.error('Failed to load gallery:', e);
@@ -2093,42 +1611,12 @@
                         console.error('Failed to load stats:', e);
                     }
                 }
-                
-                // Load multiple screen mode
-                const savedMode = localStorage.getItem('apula_multiple_screen');
-                if (savedMode === 'true') {
-                    document.getElementById('multipleScreenToggle').checked = true;
-                    setTimeout(() => this.toggleMultipleScreenMode(true), 100);
-                }
-                
-                // Load audio recording setting
-                const audioSetting = localStorage.getItem('apula_record_audio');
-                if (audioSetting !== null) {
-                    document.getElementById('recordAudio').checked = audioSetting === 'true';
-                }
-                
-                // Load multi-camera recording setting
-                const multiRecordingSetting = localStorage.getItem('apula_multi_recording');
-                if (multiRecordingSetting !== null) {
-                    document.getElementById('multiCameraRecording').checked = multiRecordingSetting === 'true';
-                }
             }
             
             saveToLocalStorage() {
                 try {
-                    // Save gallery (excluding video blobs for storage)
-                    const galleryToSave = this.mediaGallery.map(item => {
-                        if (item.type === 'video') {
-                            // Don't save blob in localStorage (it's too large)
-                            return {
-                                ...item,
-                                blob: null,
-                                url: null // Will be regenerated on load
-                            };
-                        }
-                        return item;
-                    });
-                    localStorage.setItem('apula_gallery', JSON.stringify(galleryToSave));
+                    // Save gallery
+                    localStorage.setItem('apula_gallery', JSON.stringify(this.mediaGallery));
                     
                     // Save stats
                     localStorage.setItem('apula_stats', JSON.stringify({
@@ -2137,15 +1625,6 @@
                         mediaCount: this.stats.mediaCount,
                         storageUsed: this.stats.storageUsed
                     }));
-                    
-                    // Save multiple screen mode
-                    localStorage.setItem('apula_multiple_screen', this.multipleScreenMode.toString());
-                    
-                    // Save audio recording setting
-                    localStorage.setItem('apula_record_audio', document.getElementById('recordAudio').checked.toString());
-                    
-                    // Save multi-camera recording setting
-                    localStorage.setItem('apula_multi_recording', document.getElementById('multiCameraRecording').checked.toString());
                     
                 } catch (e) {
                     console.error('Failed to save to localStorage:', e);
@@ -2180,24 +1659,8 @@
                     this.addLog(`Auto-save media ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
                 });
                 
-                document.getElementById('recordAudio').addEventListener('change', (e) => {
-                    this.showNotification('Audio Recording', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                    this.addLog(`Audio recording ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-                    this.saveToLocalStorage();
-                });
-                
-                document.getElementById('multiCameraRecording').addEventListener('change', (e) => {
-                    this.showNotification('Multi-camera Recording', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                    this.addLog(`Multi-camera recording ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-                    this.saveToLocalStorage();
-                });
-                
                 // Add test fire detection button
-                this.addTestFireButtons();
+                this.addTestFireButton();
                 
                 // Save to localStorage before page unload
                 window.addEventListener('beforeunload', () => {
@@ -2205,326 +1668,111 @@
                 });
             }
             
-            toggleMultipleScreenMode(enabled) {
-                this.multipleScreenMode = enabled;
-                
-                if (enabled) {
-                    // Switch to multi-camera mode
-                    this.showNotification('Multiple Screen Mode', 
-                        '4-camera grid mode enabled', 
-                        'info');
-                    this.addLog('Multiple screen mode enabled - 4 camera grid active', 'info');
-                    
-                    // Hide single camera view
-                    document.getElementById('singleCameraView').style.display = 'none';
-                    
-                    // Show multi-camera grid
-                    document.getElementById('multiCameraGrid').style.display = 'grid';
-                    
-                    // Show camera view controls
-                    document.getElementById('cameraViewControls').style.display = 'flex';
-                    
-                    // Show individual snapshot buttons
-                    document.getElementById('individualSnapshotButtons').style.display = 'grid';
-                    document.getElementById('snapshotBtn').style.display = 'none';
-                    
-                    // Update camera mode text
-                    document.getElementById('cameraModeText').textContent = '4 CAMERAS';
-                    
-                    // Set initial view to grid
-                    this.changeCameraView('grid');
-                    
-                    // Copy camera streams from single view to multi-view
-                    this.copyCameraStreamsToMultiView();
-                    
-                } else {
-                    // Switch to single camera mode
-                    this.showNotification('Single Screen Mode', 
-                        'Single camera mode enabled', 
-                        'info');
-                    this.addLog('Single screen mode enabled', 'info');
-                    
-                    // Show single camera view
-                    document.getElementById('singleCameraView').style.display = 'block';
-                    
-                    // Hide multi-camera views
-                    document.getElementById('multiCameraGrid').style.display = 'none';
-                    document.getElementById('focusedCameraView').style.display = 'none';
-                    
-                    // Hide camera view controls
-                    document.getElementById('cameraViewControls').style.display = 'none';
-                    
-                    // Show single snapshot button
-                    document.getElementById('individualSnapshotButtons').style.display = 'none';
-                    document.getElementById('snapshotBtn').style.display = 'flex';
-                    
-                    // Update camera mode text
-                    document.getElementById('cameraModeText').textContent = 'SINGLE CAMERA';
-                    
-                    // Set view to camera 1
-                    this.activeCamera = 'camera1';
-                    this.currentView = 'single';
-                }
-                
-                // Save to localStorage
-                this.saveToLocalStorage();
-            }
-            
-            copyCameraStreamsToMultiView() {
-                // Copy camera 1 stream to multi-view if active
-                if (this.cameras[1].isActive && this.cameras[1].stream) {
-                    const videoElement = document.getElementById('cameraFeed1multi');
-                    if (videoElement) {
-                        videoElement.srcObject = this.cameras[1].stream;
-                        videoElement.style.display = 'block';
-                        document.getElementById('cameraPlaceholder1multi').style.display = 'none';
-                    }
-                }
-            }
-            
-            async addCamera(cameraNumber) {
-                if (this.cameras[cameraNumber].isActive) {
+            async addCamera() {
+                if (this.camera.isActive) {
                     this.showNotification('Camera Already Active', 
-                        `Camera ${cameraNumber} is already connected`, 
+                        'Camera is already connected', 
                         'warning');
-                    return;
-                }
-                
-                if (this.stats.activeCameras >= 4) {
-                    this.showNotification('Maximum Cameras Reached', 
-                        'Maximum of 4 cameras allowed', 
-                        'error');
                     return;
                 }
                 
                 this.showLoading(true);
                 
                 try {
-                    const audioEnabled = document.getElementById('recordAudio').checked;
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { 
                             width: { ideal: 1280 },
                             height: { ideal: 720 },
                             frameRate: { ideal: 30 }
                         },
-                        audio: audioEnabled
+                        audio: false
                     });
                     
-                    // Set up camera feed for both single and multi views
-                    if (this.multipleScreenMode) {
-                        // Set up for multi-camera view
-                        const videoElementMulti = document.getElementById(cameraNumber === 1 ? 'cameraFeed1multi' : `cameraFeed${cameraNumber}`);
-                        if (videoElementMulti) {
-                            videoElementMulti.srcObject = stream;
-                            videoElementMulti.style.display = 'block';
-                            const placeholderId = cameraNumber === 1 ? 'cameraPlaceholder1multi' : `cameraPlaceholder${cameraNumber}`;
-                            document.getElementById(placeholderId).style.display = 'none';
-                        }
-                    } else {
-                        // Set up for single camera view
-                        if (cameraNumber === 1) {
-                            const videoElement = document.getElementById('cameraFeed1');
-                            videoElement.srcObject = stream;
-                            videoElement.style.display = 'block';
-                            document.getElementById('cameraPlaceholder1').style.display = 'none';
-                        }
-                    }
+                    // Set up camera feed
+                    const videoElement = document.getElementById('cameraFeed1');
+                    videoElement.srcObject = stream;
+                    videoElement.style.display = 'block';
+                    document.getElementById('cameraPlaceholder1').style.display = 'none';
                     
                     // Store camera data
-                    this.cameras[cameraNumber].stream = stream;
-                    this.cameras[cameraNumber].isActive = true;
-                    this.cameras[cameraNumber].mediaRecorder = null;
+                    this.camera.stream = stream;
+                    this.camera.isActive = true;
                     
                     // Initialize MediaRecorder
-                    this.setupMediaRecorder(cameraNumber, stream);
+                    this.setupMediaRecorder(stream);
                     
                     // Update status
-                    this.stats.activeCameras++;
+                    this.stats.activeCameras = 1;
                     this.updateCameraStatus();
                     this.updateStats();
                     
                     this.showNotification('Camera Connected', 
-                        `Camera ${cameraNumber} connected successfully`, 
+                        'Camera connected successfully', 
                         'success');
-                    this.addLog(`Camera ${cameraNumber} connected successfully`, 'info');
+                    this.addLog('Camera connected successfully', 'info');
                     
-                    // Enable recording button if at least one camera is connected
-                    if (this.stats.activeCameras === 1) {
-                        document.getElementById('recordBtn').classList.remove('disabled');
-                    }
+                    // Enable recording button
+                    document.getElementById('recordBtn').classList.remove('disabled');
                     
                 } catch (error) {
                     this.showNotification('Camera Error', 
-                        `Failed to access Camera ${cameraNumber}: ${error.message}`, 
+                        `Failed to access camera: ${error.message}`, 
                         'error');
-                    this.addLog(`Failed to connect Camera ${cameraNumber}: ${error.message}`, 'alert');
+                    this.addLog(`Failed to connect camera: ${error.message}`, 'alert');
                 } finally {
                     this.showLoading(false);
                 }
             }
             
-            setupMediaRecorder(cameraNumber, stream) {
+            setupMediaRecorder(stream) {
                 try {
-                    const audioEnabled = document.getElementById('recordAudio').checked;
                     const options = { 
                         mimeType: 'video/webm;codecs=vp9',
-                        videoBitsPerSecond: 2500000,
-                        audioBitsPerSecond: audioEnabled ? 128000 : 0
+                        videoBitsPerSecond: 2500000
                     };
                     
-                    const mediaRecorder = new MediaRecorder(stream, options);
+                    this.camera.mediaRecorder = new MediaRecorder(stream, options);
                     
-                    mediaRecorder.ondataavailable = (event) => {
+                    this.camera.mediaRecorder.ondataavailable = (event) => {
                         if (event.data.size > 0) {
                             this.recordedChunks.push(event.data);
                         }
                     };
                     
-                    mediaRecorder.onstop = () => {
-                        this.saveRecording(cameraNumber);
+                    this.camera.mediaRecorder.onstop = () => {
+                        this.saveRecording();
                     };
-                    
-                    this.cameras[cameraNumber].mediaRecorder = mediaRecorder;
                     
                 } catch (error) {
                     console.error('MediaRecorder setup error:', error);
-                    // Try default mimeType
-                    try {
-                        const audioEnabled = document.getElementById('recordAudio').checked;
-                        const mediaRecorder = new MediaRecorder(stream, {
-                            videoBitsPerSecond: 2500000,
-                            audioBitsPerSecond: audioEnabled ? 128000 : 0
-                        });
-                        
-                        mediaRecorder.ondataavailable = (event) => {
-                            if (event.data.size > 0) {
-                                this.recordedChunks.push(event.data);
-                            }
-                        };
-                        
-                        mediaRecorder.onstop = () => {
-                            this.saveRecording(cameraNumber);
-                        };
-                        
-                        this.cameras[cameraNumber].mediaRecorder = mediaRecorder;
-                    } catch (e) {
-                        console.error('Failed to setup MediaRecorder:', e);
-                    }
                 }
             }
             
-            async connectCamera(type, button) {
-                // Show loading state
-                button.classList.add('loading');
-                button.disabled = true;
-                
+            async connectCamera(type) {
                 if (type === 'bluetooth') {
                     this.showNotification('Bluetooth Connection', 
                         'Searching for Bluetooth cameras...', 
                         'info');
                     this.addLog('Initiating Bluetooth camera connection', 'info');
                     
-                    // Simulate Bluetooth connection with loading
+                    // Simulate Bluetooth connection
                     setTimeout(() => {
-                        this.connectionStates.bluetooth = true;
-                        button.classList.remove('loading');
-                        button.disabled = false;
-                        button.innerHTML = `<i class="fas fa-check-circle"></i><span class="btn-label">Connected</span>`;
-                        button.style.borderColor = 'var(--neon-green)';
-                        
                         this.showNotification('Bluetooth Connected', 
                             'Bluetooth camera connected successfully', 
                             'success');
                         this.addLog('Bluetooth camera connected successfully', 'info');
-                    }, 3000);
-                    
-                } else if (type === 'wifi') {
-                    this.showNotification('WiFi Connection', 
-                        'Connecting to WiFi camera...', 
-                        'info');
-                    this.addLog('Initiating WiFi camera connection', 'info');
-                    
-                    // Simulate WiFi connection with loading
-                    setTimeout(() => {
-                        this.connectionStates.wifi = true;
-                        button.classList.remove('loading');
-                        button.disabled = false;
-                        button.innerHTML = `<i class="fas fa-check-circle"></i><span class="btn-label">Connected</span>`;
-                        button.style.borderColor = 'var(--neon-green)';
-                        
-                        this.showNotification('WiFi Connected', 
-                            'WiFi camera connected successfully', 
-                            'success');
-                        this.addLog('WiFi camera connected successfully', 'info');
-                    }, 2500);
-                    
+                    }, 1500);
                 } else {
                     this.showNotification('Camera Connection', 
-                        `Use "Add Camera" button to connect a ${type} camera`, 
+                        `Use "Connect Camera" button to connect a ${type} camera`, 
                         'info');
                     this.addLog(`Camera connection type selected: ${type}`, 'info');
-                    
-                    // Reset button after short delay
-                    setTimeout(() => {
-                        button.classList.remove('loading');
-                        button.disabled = false;
-                    }, 1000);
-                }
-            }
-            
-            changeCameraView(view) {
-                if (!this.multipleScreenMode) return;
-                
-                // Update all view control buttons
-                document.querySelectorAll('.view-control-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Activate the clicked button
-                document.getElementById(`${view}ViewBtn`).classList.add('active');
-                
-                if (view === 'grid') {
-                    // Show grid view
-                    document.getElementById('multiCameraGrid').style.display = 'grid';
-                    document.getElementById('focusedCameraView').style.display = 'none';
-                    this.currentView = 'multi';
-                    this.activeCamera = 'grid';
-                    this.addLog('Switched to grid view (all cameras)', 'info');
-                } else {
-                    // Show focused camera view
-                    const cameraNumber = parseInt(view.replace('camera', ''));
-                    
-                    if (this.cameras[cameraNumber].isActive) {
-                        const focusedVideo = document.getElementById('focusedCameraFeed');
-                        const focusedLabel = document.getElementById('focusedCameraLabel');
-                        
-                        // Get the stream from the camera
-                        const stream = this.cameras[cameraNumber].stream;
-                        if (stream) {
-                            focusedVideo.srcObject = stream;
-                            focusedVideo.style.display = 'block';
-                            focusedLabel.textContent = `Camera ${cameraNumber}`;
-                            
-                            // Show focused view, hide grid
-                            document.getElementById('multiCameraGrid').style.display = 'none';
-                            document.getElementById('focusedCameraView').style.display = 'block';
-                            
-                            this.currentView = 'focused';
-                            this.activeCamera = view;
-                            this.addLog(`Switched to Camera ${cameraNumber} focused view`, 'info');
-                        }
-                    } else {
-                        this.showNotification('Camera Not Available', 
-                            `Camera ${cameraNumber} is not connected`, 
-                            'warning');
-                        this.changeCameraView('grid');
-                    }
                 }
             }
             
             startRecording() {
-                if (this.stats.activeCameras === 0) {
-                    this.showNotification('Recording Error', 'No cameras connected', 'error');
+                if (!this.camera.isActive) {
+                    this.showNotification('Recording Error', 'No camera connected', 'error');
                     return;
                 }
                 
@@ -2533,167 +1781,27 @@
                     return;
                 }
                 
-                const multiCameraRecordingEnabled = document.getElementById('multiCameraRecording').checked;
-                
-                if (this.multipleScreenMode && multiCameraRecordingEnabled && this.stats.activeCameras > 1) {
-                    // Start multi-camera recording
-                    this.startMultiCameraRecording();
-                } else {
-                    // Start single camera recording
-                    this.startSingleCameraRecording();
-                }
-            }
-            
-            startSingleCameraRecording() {
-                // Determine which camera to record from
-                let cameraNumber;
-                
-                if (this.multipleScreenMode) {
-                    if (this.currentView === 'multi' || this.activeCamera === 'grid') {
-                        // Record from first active camera in grid view
-                        for (let i = 1; i <= 4; i++) {
-                            if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
-                                cameraNumber = i;
-                                break;
-                            }
-                        }
-                    } else if (this.currentView === 'focused') {
-                        // Record from the focused camera
-                        cameraNumber = parseInt(this.activeCamera.replace('camera', ''));
-                    }
-                } else {
-                    // Record from camera 1 in single mode
-                    cameraNumber = 1;
-                }
-                
-                if (!cameraNumber || !this.cameras[cameraNumber].mediaRecorder) {
-                    this.showNotification('Recording Error', 'No suitable camera for recording', 'error');
-                    return;
-                }
-                
-                this.currentRecordingCamera = cameraNumber;
                 this.isRecording = true;
                 this.recordedChunks = [];
                 
                 // Start recording
-                const mediaRecorder = this.cameras[cameraNumber].mediaRecorder;
-                mediaRecorder.start(1000); // Collect data every second
+                if (this.camera.mediaRecorder) {
+                    this.camera.mediaRecorder.start(1000); // Collect data every second
+                }
                 
                 // Update UI
                 document.getElementById('recordBtn').classList.add('disabled');
                 document.getElementById('stopBtn').classList.remove('disabled');
                 
-                // Show recording indicator
-                if (this.multipleScreenMode) {
-                    if (this.currentView === 'focused') {
-                        document.getElementById('focusedRecordingOverlay').style.display = 'block';
-                    } else {
-                        document.getElementById(`recordingOverlay${cameraNumber}`).style.display = 'block';
-                    }
-                } else {
-                    document.getElementById('singleRecordingOverlay').style.display = 'block';
-                }
-                
                 this.showNotification('Recording Started', 
-                    `Recording from Camera ${cameraNumber}`, 
+                    'Recording started', 
                     'success');
-                this.addLog(`Recording started from Camera ${cameraNumber}`, 'info');
+                this.addLog('Recording started', 'info');
                 this.updateRecordingStatus('recording');
                 
                 // Update storage usage
                 this.stats.storageUsed += 0.1;
                 this.updateStats();
-            }
-            
-            startMultiCameraRecording() {
-                this.isMultiCameraRecording = true;
-                this.isRecording = true;
-                this.multiRecordingChunks = [];
-                
-                // Start recording from all active cameras
-                const activeCameras = [];
-                for (let i = 1; i <= 4; i++) {
-                    if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
-                        activeCameras.push(i);
-                        const mediaRecorder = this.cameras[i].mediaRecorder;
-                        mediaRecorder.start(1000);
-                        
-                        // Show recording indicator for each camera
-                        document.getElementById(`recordingOverlay${i}`).style.display = 'block';
-                    }
-                }
-                
-                // Update UI
-                document.getElementById('recordBtn').classList.add('disabled');
-                document.getElementById('stopBtn').classList.remove('disabled');
-                
-                this.showNotification('Multi-camera Recording Started', 
-                    `Recording from ${activeCameras.length} cameras`, 
-                    'success');
-                this.addLog(`Multi-camera recording started from cameras: ${activeCameras.join(', ')}`, 'info');
-                this.updateRecordingStatus('recording');
-                
-                // Start capturing grid layout
-                this.startGridCapture();
-            }
-            
-            startGridCapture() {
-                // Capture frames from all active cameras and combine them into a grid
-                this.gridCaptureInterval = setInterval(() => {
-                    this.captureGridFrame();
-                }, 100); // Capture at 10fps for grid view
-            }
-            
-            captureGridFrame() {
-                // Clear master canvas
-                this.masterContext.fillStyle = '#000000';
-                this.masterContext.fillRect(0, 0, this.masterCanvas.width, this.masterCanvas.height);
-                
-                const cellWidth = this.masterCanvas.width / 2;
-                const cellHeight = this.masterCanvas.height / 2;
-                
-                // Draw each camera feed in its grid position
-                for (let i = 1; i <= 4; i++) {
-                    if (this.cameras[i].isActive && this.cameras[i].stream) {
-                        const videoElement = document.getElementById(i === 1 ? 'cameraFeed1multi' : `cameraFeed${i}`);
-                        if (videoElement && videoElement.readyState >= videoElement.HAVE_CURRENT_DATA) {
-                            // Draw camera feed to individual canvas
-                            const canvas = this.cameras[i].canvas;
-                            const context = this.cameras[i].context;
-                            
-                            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                            
-                            // Calculate grid position
-                            const row = Math.floor((i - 1) / 2);
-                            const col = (i - 1) % 2;
-                            const x = col * cellWidth;
-                            const y = row * cellHeight;
-                            
-                            // Draw to master canvas
-                            this.masterContext.drawImage(canvas, x, y, cellWidth, cellHeight);
-                            
-                            // Draw camera label
-                            this.masterContext.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                            this.masterContext.fillRect(x + 5, y + 5, 80, 25);
-                            this.masterContext.fillStyle = 'white';
-                            this.masterContext.font = '14px Montserrat';
-                            this.masterContext.fillText(`Camera ${i}`, x + 10, y + 22);
-                            
-                            // Draw recording indicator
-                            this.masterContext.fillStyle = 'rgba(255, 68, 68, 0.9)';
-                            this.masterContext.fillRect(x + cellWidth - 60, y + 5, 55, 25);
-                            this.masterContext.fillStyle = 'white';
-                            this.masterContext.fillText('REC', x + cellWidth - 50, y + 22);
-                        }
-                    }
-                }
-                
-                // Convert canvas to blob and add to chunks
-                this.masterCanvas.toBlob((blob) => {
-                    if (blob) {
-                        this.multiRecordingChunks.push(blob);
-                    }
-                }, 'image/jpeg', 0.8);
             }
             
             stopRecording() {
@@ -2703,12 +1811,9 @@
                 
                 this.isRecording = false;
                 
-                if (this.isMultiCameraRecording) {
-                    // Stop multi-camera recording
-                    this.stopMultiCameraRecording();
-                } else {
-                    // Stop single camera recording
-                    this.stopSingleCameraRecording();
+                // Stop recording
+                if (this.camera.mediaRecorder) {
+                    this.camera.mediaRecorder.stop();
                 }
                 
                 // Update UI
@@ -2721,47 +1826,12 @@
                 this.updateRecordingStatus('stopped');
             }
             
-            stopSingleCameraRecording() {
-                // Stop recording
-                if (this.currentRecordingCamera && this.cameras[this.currentRecordingCamera].mediaRecorder) {
-                    const mediaRecorder = this.cameras[this.currentRecordingCamera].mediaRecorder;
-                    mediaRecorder.stop();
+            saveRecording() {
+                if (this.recordedChunks.length === 0) {
+                    this.showNotification('Recording Error', 'No recording data found', 'error');
+                    return;
                 }
                 
-                // Hide recording indicators
-                if (this.multipleScreenMode) {
-                    if (this.currentView === 'focused') {
-                        document.getElementById('focusedRecordingOverlay').style.display = 'none';
-                    } else if (this.currentRecordingCamera) {
-                        document.getElementById(`recordingOverlay${this.currentRecordingCamera}`).style.display = 'none';
-                    }
-                } else {
-                    document.getElementById('singleRecordingOverlay').style.display = 'none';
-                }
-            }
-            
-            stopMultiCameraRecording() {
-                this.isMultiCameraRecording = false;
-                
-                // Stop all camera recordings
-                for (let i = 1; i <= 4; i++) {
-                    if (this.cameras[i].isActive && this.cameras[i].mediaRecorder) {
-                        const mediaRecorder = this.cameras[i].mediaRecorder;
-                        mediaRecorder.stop();
-                        document.getElementById(`recordingOverlay${i}`).style.display = 'none';
-                    }
-                }
-                
-                // Stop grid capture
-                if (this.gridCaptureInterval) {
-                    clearInterval(this.gridCaptureInterval);
-                }
-                
-                // Save grid recording
-                this.saveGridRecording();
-            }
-            
-            saveRecording(cameraNumber) {
                 const blob = new Blob(this.recordedChunks, {
                     type: 'video/webm'
                 });
@@ -2780,7 +1850,7 @@
                     const mediaItem = {
                         type: 'video',
                         url: videoUrl,
-                        camera: cameraNumber,
+                        camera: 1,
                         timestamp: timestamp,
                         size: sizeMB,
                         blob: blob,
@@ -2794,68 +1864,17 @@
                     this.updateGallery();
                     this.saveToLocalStorage();
                     
-                    this.addLog(`Recording saved from Camera ${cameraNumber} (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
+                    this.addLog(`Recording saved (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
                 };
-            }
-            
-            saveGridRecording() {
-                if (this.multiRecordingChunks.length === 0) return;
-                
-                // Create a video from the image sequence
-                // Note: In a real implementation, you would use a proper video encoder
-                // For this demo, we'll create a simple representation
-                
-                const sizeMB = Math.round(this.multiRecordingChunks.length * 0.05 * 100) / 100; // Estimate size
-                const timestamp = new Date().toLocaleString();
-                
-                // For demo purposes, create a mock video item
-                const mediaItem = {
-                    type: 'video',
-                    url: '#', // Would be a real video URL in production
-                    camera: 'grid',
-                    timestamp: timestamp,
-                    size: sizeMB,
-                    blob: null,
-                    duration: Math.round(this.multiRecordingChunks.length / 10) // 10fps
-                };
-                
-                this.mediaGallery.push(mediaItem);
-                this.stats.mediaCount++;
-                this.stats.storageUsed += sizeMB;
-                this.updateStats();
-                this.updateGallery();
-                this.saveToLocalStorage();
-                
-                this.addLog(`Multi-camera grid recording saved (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
-                
-                // Clear chunks
-                this.multiRecordingChunks = [];
             }
             
             captureSnapshot() {
-                if (!this.multipleScreenMode) {
-                    // Single camera mode - capture from camera 1
-                    this.captureSnapshotFromCamera(1);
-                }
-            }
-            
-            captureSnapshotFromCamera(cameraNumber) {
-                if (!this.cameras[cameraNumber].isActive) {
-                    this.showNotification('Snapshot Error', `Camera ${cameraNumber} is not connected`, 'error');
+                if (!this.camera.isActive) {
+                    this.showNotification('Snapshot Error', 'Camera is not connected', 'error');
                     return;
                 }
                 
-                let videoElement;
-                
-                if (this.multipleScreenMode) {
-                    if (this.currentView === 'focused' && this.activeCamera === `camera${cameraNumber}`) {
-                        videoElement = document.getElementById('focusedCameraFeed');
-                    } else {
-                        videoElement = document.getElementById(cameraNumber === 1 ? 'cameraFeed1multi' : `cameraFeed${cameraNumber}`);
-                    }
-                } else {
-                    videoElement = document.getElementById('cameraFeed1');
-                }
+                const videoElement = document.getElementById('cameraFeed1');
                 
                 if (!videoElement) {
                     this.showNotification('Snapshot Error', 'Video element not found', 'error');
@@ -2877,7 +1896,7 @@
                     const mediaItem = {
                         type: 'image',
                         url: imageUrl,
-                        camera: cameraNumber,
+                        camera: 1,
                         timestamp: timestamp,
                         size: 0.1, // Estimated size in MB
                         blob: null
@@ -2891,9 +1910,9 @@
                     this.saveToLocalStorage();
                     
                     this.showNotification('Snapshot Saved', 
-                        `Snapshot from Camera ${cameraNumber} saved to gallery`, 
+                        'Snapshot saved to gallery', 
                         'success');
-                    this.addLog(`Snapshot captured from Camera ${cameraNumber}`, 'info');
+                    this.addLog('Snapshot captured', 'info');
                     
                 } catch (error) {
                     this.showNotification('Snapshot Error', 'Failed to capture image', 'error');
@@ -2902,19 +1921,7 @@
             }
             
             toggleFullscreen() {
-                let element;
-                
-                if (this.multipleScreenMode) {
-                    if (this.currentView === 'multi' || this.activeCamera === 'grid') {
-                        element = document.getElementById('cameraCard');
-                    } else if (this.currentView === 'focused') {
-                        element = document.getElementById('focusedCameraView');
-                    } else {
-                        element = document.getElementById('multiCameraGrid');
-                    }
-                } else {
-                    element = document.getElementById('singleCameraView');
-                }
+                const element = document.getElementById('singleCameraView');
                 
                 if (!document.fullscreenElement) {
                     if (element.requestFullscreen) {
@@ -2926,10 +1933,6 @@
                     } else if (element.msRequestFullscreen) {
                         element.msRequestFullscreen();
                     }
-                    
-                    // Update button text
-                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-compress"></i>Exit Fullscreen';
-                    
                 } else {
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
@@ -2940,9 +1943,6 @@
                     } else if (document.msExitFullscreen) {
                         document.msExitFullscreen();
                     }
-                    
-                    // Update button text
-                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-expand"></i>Fullscreen';
                 }
             }
             
@@ -2953,12 +1953,11 @@
                                    document.msFullscreenElement;
                 
                 if (isFullscreen) {
-                    document.body.classList.add('fullscreen-mode');
-                    document.getElementById('exitFullscreenBtn').style.display = 'flex';
+                    // Add fullscreen styles if needed
+                    document.getElementById('singleCameraView').style.height = 'calc(100vh - 40px)';
                 } else {
-                    document.body.classList.remove('fullscreen-mode');
-                    document.getElementById('exitFullscreenBtn').style.display = 'none';
-                    document.getElementById('fullscreenBtn').innerHTML = '<i class="fas fa-expand"></i>Fullscreen';
+                    // Reset styles when exiting fullscreen
+                    document.getElementById('singleCameraView').style.height = '';
                 }
             }
             
@@ -3044,7 +2043,7 @@
                 }
             }
             
-            handleFireDetection(cameraNumber) {
+            handleFireDetection() {
                 // Don't trigger multiple fire alerts within 30 seconds
                 const now = Date.now();
                 if (this.lastFireDetection && (now - this.lastFireDetection) < 30000) {
@@ -3056,16 +2055,16 @@
                 const fireStatus = document.getElementById('fireStatus');
                 fireStatus.classList.add('alert');
                 fireStatus.querySelector('.status-text').textContent = 'FIRE DETECTED!';
-                fireStatus.querySelector('.status-subtext').textContent = `Camera ${cameraNumber}`;
+                fireStatus.querySelector('.status-subtext').textContent = 'Camera 1';
                 
                 // Update modal message
                 document.getElementById('fireAlertMessage').textContent = 
-                    `Fire has been detected in Camera ${cameraNumber}. Water suppression system is activating automatically.`;
+                    'Fire has been detected. Water suppression system is activating automatically.';
                 
                 // Show fire alert modal
                 document.getElementById('fireAlertModal').style.display = 'flex';
                 
-                this.addLog(`🔥 FIRE DETECTED in Camera ${cameraNumber}`, 'alert');
+                this.addLog('🔥 FIRE DETECTED', 'alert');
                 
                 this.stats.fires++;
                 this.updateStats();
@@ -3103,15 +2102,15 @@
                 const subtext = cameraCard.querySelector('.status-subtext');
                 const icon = cameraCard.querySelector('.status-icon');
                 
-                if (this.stats.activeCameras > 0) {
-                    text.textContent = `${this.stats.activeCameras} CAMERA${this.stats.activeCameras > 1 ? 'S' : ''} ONLINE`;
-                    subtext.textContent = `${this.stats.activeCameras} of 4 Connected`;
+                if (this.camera.isActive) {
+                    text.textContent = 'CAMERA ONLINE';
+                    subtext.textContent = 'Single Camera Connected';
                     icon.style.color = 'var(--neon-green)';
                     icon.classList.remove('fa-video-slash');
                     icon.classList.add('fa-video');
                 } else {
-                    text.textContent = 'CAMERAS OFFLINE';
-                    subtext.textContent = '0 of 4 Connected';
+                    text.textContent = 'CAMERA OFFLINE';
+                    subtext.textContent = 'Single Camera System';
                     icon.style.color = 'var(--primary-orange)';
                     icon.classList.remove('fa-video');
                     icon.classList.add('fa-video-slash');
@@ -3161,7 +2160,7 @@
             }
             
             updateStats() {
-                document.getElementById('statCameras').textContent = `${this.stats.activeCameras}/4`;
+                document.getElementById('statCameras').textContent = `${this.stats.activeCameras}/1`;
                 document.getElementById('statFires').textContent = this.stats.fires;
                 document.getElementById('statWater').textContent = this.stats.waterActivations;
                 document.getElementById('statMedia').textContent = this.stats.mediaCount;
@@ -3199,9 +2198,9 @@
                     
                     if (item.type === 'image') {
                         galleryItem.innerHTML = `
-                            <img src="${item.url}" alt="Snapshot from Camera ${item.camera}">
+                            <img src="${item.url}" alt="Snapshot from Camera">
                             <div class="gallery-item-info">
-                                <div>Camera ${item.camera} - ${item.timestamp}</div>
+                                <div>${item.timestamp}</div>
                                 <div>${item.size} MB</div>
                             </div>
                             <div class="gallery-item-actions">
@@ -3219,7 +2218,7 @@
                                 <source src="${item.url}" type="video/webm">
                             </video>
                             <div class="gallery-item-info">
-                                <div>Camera ${item.camera} - ${item.timestamp}</div>
+                                <div>${item.timestamp}</div>
                                 <div>${item.size} MB${item.duration ? ` (${item.duration}s)` : ''}</div>
                             </div>
                             <div class="gallery-item-actions">
@@ -3257,10 +2256,10 @@
                         ia[i] = byteString.charCodeAt(i);
                     }
                     blob = new Blob([ab], { type: mimeString });
-                    filename = `apula-snapshot-cam${mediaItem.camera}-${Date.now()}.png`;
+                    filename = `apula-snapshot-${Date.now()}.png`;
                 } else if (mediaItem.type === 'video') {
                     blob = mediaItem.blob;
-                    filename = `apula-recording-cam${mediaItem.camera}-${Date.now()}.webm`;
+                    filename = `apula-recording-${Date.now()}.webm`;
                 }
                 
                 if (!blob) {
@@ -3274,9 +2273,9 @@
                 link.click();
                 
                 this.showNotification('Download Started', 
-                    `Downloading ${mediaItem.type} from Camera ${mediaItem.camera}`, 
+                    `Downloading ${mediaItem.type}`, 
                     'info');
-                this.addLog(`Downloaded ${mediaItem.type} from Camera ${mediaItem.camera}`, 'info');
+                this.addLog(`Downloaded ${mediaItem.type}`, 'info');
             }
             
             deleteMedia(index) {
@@ -3469,28 +2468,26 @@
                 setTimeout(() => flash.remove(), 500);
             }
             
-            addTestFireButtons() {
-                // Add test buttons for each camera
-                for (let i = 1; i <= 4; i++) {
-                    const testBtn = document.createElement('button');
-                    testBtn.innerHTML = `🔥 Test Cam ${i}`;
-                    testBtn.style.position = 'fixed';
-                    testBtn.style.bottom = `${20 + (i-1) * 50}px`;
-                    testBtn.style.right = '20px';
-                    testBtn.style.padding = '10px 15px';
-                    testBtn.style.background = 'linear-gradient(135deg, var(--primary-red), var(--dark-red))';
-                    testBtn.style.color = 'white';
-                    testBtn.style.border = 'none';
-                    testBtn.style.borderRadius = '8px';
-                    testBtn.style.cursor = 'pointer';
-                    testBtn.style.zIndex = '1000';
-                    testBtn.style.boxShadow = '0 4px 15px rgba(255, 68, 68, 0.5)';
-                    testBtn.style.fontSize = '0.8rem';
-                    testBtn.onclick = () => {
-                        this.handleFireDetection(i);
-                    };
-                    document.body.appendChild(testBtn);
-                }
+            addTestFireButton() {
+                // Add test fire button
+                const testBtn = document.createElement('button');
+                testBtn.innerHTML = `🔥 Test Fire Detection`;
+                testBtn.style.position = 'fixed';
+                testBtn.style.bottom = '20px';
+                testBtn.style.right = '20px';
+                testBtn.style.padding = '12px 20px';
+                testBtn.style.background = 'linear-gradient(135deg, var(--primary-red), var(--dark-red))';
+                testBtn.style.color = 'white';
+                testBtn.style.border = 'none';
+                testBtn.style.borderRadius = '8px';
+                testBtn.style.cursor = 'pointer';
+                testBtn.style.zIndex = '1000';
+                testBtn.style.boxShadow = '0 4px 15px rgba(255, 68, 68, 0.5)';
+                testBtn.style.fontSize = '0.9rem';
+                testBtn.onclick = () => {
+                    this.handleFireDetection();
+                };
+                document.body.appendChild(testBtn);
             }
         }
 
@@ -3498,38 +2495,21 @@
         window.app = new APULAApp();
         
         // Make functions globally available
-        window.connectCamera = (type, button) => app.connectCamera(type, button);
-        window.addCamera = (num) => app.addCamera(num);
+        window.connectCamera = (type) => app.connectCamera(type);
+        window.addCamera = () => app.addCamera();
         window.startRecording = () => app.startRecording();
         window.stopRecording = () => app.stopRecording();
         window.captureSnapshot = () => app.captureSnapshot();
-        window.captureSnapshotFromCamera = (num) => app.captureSnapshotFromCamera(num);
         window.toggleFullscreen = () => app.toggleFullscreen();
+        window.exitFullscreen = () => app.toggleFullscreen(); // Same function toggles
         window.updatePressure = (value) => app.updatePressure(value);
         window.activateWater = () => app.activateWater();
         window.deactivateWater = () => app.deactivateWater();
         window.testSprinkler = () => app.testSprinkler();
         window.emergencyStop = () => app.emergencyStop();
-        window.changeCameraView = (view) => app.changeCameraView(view);
         window.closeFireAlert = () => app.closeFireAlert();
         window.clearLogs = () => app.clearLogs();
         window.clearGallery = () => app.clearGallery();
-        
-        // Exit fullscreen function
-        window.exitFullscreen = () => {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        };
-        
-        // Bind exit fullscreen button
-        document.getElementById('exitFullscreenBtn').addEventListener('click', exitFullscreen);
     </script>
 </body>
 </html>
