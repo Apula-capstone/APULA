@@ -1934,7 +1934,7 @@
             <i class="fas fa-bolt"></i>
             Test Connection
         </button>
-        <button class="camera-control-btn warning" onclick="arduino.simulateSensorTest()">
+        <button class="camera-control-btn warning" onclick="arduino.testSensors()">
             <i class="fas fa-vial"></i>
             Test Sensors
         </button>
@@ -2011,6 +2011,7 @@
             <!-- Center Column -->
             <div class="column">
                 <!-- Live Camera Feed with Arduino Alert -->
+<!-- Live Camera Feed with Arduino Alert -->
 <div class="card" id="cameraCard">
     <h2 class="card-title">
         <i class="fas fa-eye"></i>
@@ -2028,42 +2029,40 @@
         <div style="font-size: 0.9rem; margin-top: 5px;" id="arduinoAlertLocation"></div>
     </div>
     
-    <!-- Rest of your camera feed code... -->
+    <!-- Single Camera View -->
+    <div class="single-camera-feed" id="singleCameraView">
+        <video id="cameraFeed1" autoplay playsinline muted></video>
+        <div class="camera-placeholder" id="cameraPlaceholder1">
+            <i class="fas fa-camera"></i>
+            <p>Camera 1</p>
+            <button class="camera-control-btn" onclick="addCamera(1)" style="width: 180px; margin-top: 15px;">
+                <i class="fas fa-plus"></i>
+                Connect Camera
+            </button>
+        </div>
+        <div class="camera-label">Camera 1</div>
+    </div>
+    
+    <!-- Camera Controls -->
+    <div class="camera-controls">
+        <button class="camera-control-btn success" onclick="startRecording()" id="recordBtn">
+            <i class="fas fa-record-vinyl"></i>
+            Start Recording
+        </button>
+        <button class="camera-control-btn danger disabled" onclick="stopRecording()" id="stopBtn">
+            <i class="fas fa-stop"></i>
+            Stop Recording
+        </button>
+        <button class="camera-control-btn secondary" onclick="captureSnapshot()" id="snapshotBtn">
+            <i class="fas fa-camera"></i>
+            Take Snapshot
+        </button>
+        <button class="camera-control-btn" onclick="toggleFullscreen()">
+            <i class="fas fa-expand"></i>
+            Fullscreen
+        </button>
+    </div>
 </div>
-                    <!-- Single Camera View -->
-                    <div class="single-camera-feed" id="singleCameraView">
-                        <video id="cameraFeed1" autoplay playsinline muted></video>
-                        <div class="camera-placeholder" id="cameraPlaceholder1">
-                            <i class="fas fa-camera"></i>
-                            <p>Camera 1</p>
-                            <button class="camera-control-btn" onclick="addCamera(1)" style="width: 180px; margin-top: 15px;">
-                                <i class="fas fa-plus"></i>
-                                Connect Camera
-                            </button>
-                        </div>
-                        <div class="camera-label">Camera 1</div>
-                    </div>
-                    
-                    <!-- Camera Controls -->
-                    <div class="camera-controls">
-                        <button class="camera-control-btn success" onclick="startRecording()" id="recordBtn">
-                            <i class="fas fa-record-vinyl"></i>
-                            Start Recording
-                        </button>
-                        <button class="camera-control-btn danger disabled" onclick="stopRecording()" id="stopBtn">
-                            <i class="fas fa-stop"></i>
-                            Stop Recording
-                        </button>
-                        <button class="camera-control-btn secondary" onclick="captureSnapshot()" id="snapshotBtn">
-                            <i class="fas fa-camera"></i>
-                            Take Snapshot
-                        </button>
-                        <button class="camera-control-btn" onclick="toggleFullscreen()">
-                            <i class="fas fa-expand"></i>
-                            Fullscreen
-                        </button>
-                    </div>
-                </div>
 
                 <!-- Enhanced Water Control -->
                 <div class="card">
