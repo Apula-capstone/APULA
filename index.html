@@ -3,1708 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>APULA - Dashboard</title>
+    <title>APULA - Smart Fire Detection & Prevention System</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* === KEEP ALL YOUR ORIGINAL CSS HERE === */
+        /* Copy the ENTIRE style section from your original code */
         :root {
-            /* Enhanced Color Palette */
             --primary-red: #FF4444;
             --primary-orange: #FF6B35;
-            --secondary-orange: #FF8B5A;
-            --light-orange: #FFB08F;
-            --dark-red: #CC0000;
-            --electric-blue: #00B4D8;
-            --neon-green: #39FF14;
-            --purple-accent: #7209B7;
-            --yellow-warning: #FFD700;
-            
-            /* Backgrounds */
-            --bg-dark: #0A0A0A;
-            --bg-card: #151515;
-            --bg-hover: #252525;
-            --bg-gradient: linear-gradient(135deg, #0A0A0A 0%, #1A0A0A 30%, #0A1A1A 100%);
-            
-            /* Text */
-            --text-light: #FFFFFF;
-            --text-dim: #AAAAAA;
-            --text-highlight: #FF8B5A;
-            
-            /* Shadows & Glows */
-            --glow-red: 0 0 20px rgba(255, 68, 68, 0.5);
-            --glow-orange: 0 0 20px rgba(255, 107, 53, 0.5);
-            --glow-blue: 0 0 20px rgba(0, 180, 216, 0.5);
-            --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.5);
-            
-            /* Borders */
-            --border-radius: 16px;
-            --border-glow: 1px solid rgba(255, 107, 53, 0.3);
-            
-            /* Spacing */
-            --spacing-xs: 10px;
-            --spacing-sm: 15px;
-            --spacing-md: 20px;
-            --spacing-lg: 30px;
-            --spacing-xl: 40px;
+            /* ... ALL your CSS variables ... */
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
-
+        
         body {
             background: var(--bg-gradient);
-            color: var(--text-light);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            font-size: 14px; /* Base font size for mobile */
+            /* ... ALL your original CSS ... */
         }
-
-        @media (min-width: 768px) {
-            body {
-                font-size: 16px; /* Larger font for desktop */
-            }
+        
+        /* === DON'T MODIFY ANY CSS === */
+        /* Keep everything exactly as in your original code */
+        
+        /* === ADD THESE NEW STYLES AT THE END OF THE CSS === */
+        
+        /* Arduino Status Card */
+        .status-card.arduino-success {
+            border-color: var(--neon-green);
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.1), rgba(26, 42, 26, 0.9));
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 180, 216, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        
+        .status-card.arduino-success .status-icon {
+            color: var(--neon-green);
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        
+        .status-card.arduino-warning {
+            border-color: var(--yellow-warning);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(58, 58, 26, 0.9));
         }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-card);
-            border-radius: 10px;
+        
+        .status-card.arduino-disconnected {
+            border-color: var(--text-dim);
+            background: linear-gradient(135deg, rgba(170, 170, 170, 0.1), rgba(42, 42, 42, 0.9));
         }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-orange);
-            border-radius: 10px;
-            border: 2px solid var(--bg-card);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-orange);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: var(--spacing-md);
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: var(--spacing-sm);
-            }
-        }
-
-        /* Enhanced Header */
-        .header {
-            text-align: center;
-            padding: var(--spacing-md);
-            background: linear-gradient(135deg, 
-                rgba(255, 68, 68, 0.9) 0%, 
-                rgba(255, 107, 53, 0.9) 50%, 
-                rgba(204, 0, 0, 0.9) 100%);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--spacing-lg);
-            box-shadow: var(--glow-red), var(--shadow-deep);
-            position: relative;
-            overflow: hidden;
-            border: var(--border-glow);
-            backdrop-filter: blur(10px);
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                padding: var(--spacing-sm);
-                margin-bottom: var(--spacing-md);
-            }
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .logo-icon {
-            font-size: 3rem;
-            color: white;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-            animation: pulse 2s infinite;
-        }
-
-        @media (max-width: 768px) {
-            .logo-icon {
-                font-size: 2rem;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .logo {
-            font-size: 3rem;
-            font-weight: 900;
-            color: white;
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.5),
-                0 0 20px rgba(255, 107, 53, 0.7),
-                3px 3px 0 rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-            background: linear-gradient(45deg, #FFFFFF, #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2rem;
-                letter-spacing: 1px;
-            }
-            
-            .logo-container {
-                gap: var(--spacing-sm);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 1.8rem;
-            }
-        }
-
-        .tagline {
-            font-size: 1rem;
-            opacity: 0.95;
-            font-weight: 300;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            margin-top: var(--spacing-xs);
-        }
-
-        @media (max-width: 768px) {
-            .tagline {
-                font-size: 0.9rem;
-                letter-spacing: 0.5px;
-            }
-        }
-
-        /* Enhanced Dashboard Grid - Responsive */
-        .dashboard-grid {
+        
+        /* Sensor Display */
+        .sensor-display {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        /* Enhanced Card Styles */
-        .card {
-            background: rgba(21, 21, 21, 0.9);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-lg);
-            box-shadow: var(--shadow-deep);
-            transition: all 0.3s ease;
-            border: var(--border-glow);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            height: fit-content;
-        }
-
-        @media (max-width: 768px) {
-            .card {
-                padding: var(--spacing-md);
-            }
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-orange), var(--primary-red));
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--glow-orange), var(--shadow-deep);
-            border-color: rgba(255, 107, 53, 0.6);
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
+            grid-template-columns: repeat(3, 1fr);
             gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+            background: rgba(255, 107, 53, 0.05);
+            padding: var(--spacing-sm);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+        
+        .sensor-item {
+            text-align: center;
+            padding: var(--spacing-xs);
+        }
+        
+        .sensor-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+        
+        .sensor-value {
             font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-light);
         }
-
-        @media (max-width: 768px) {
-            .card-title {
-                font-size: 1.1rem;
-                margin-bottom: var(--spacing-md);
-            }
+        
+        .sensor-value.fire {
+            color: var(--primary-red);
+            animation: pulse 1s infinite;
         }
-
-        .card-title i {
-            font-size: 1.5rem;
-            color: var(--primary-orange);
-            background: rgba(255, 107, 53, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        
+        .sensor-value.warning {
+            color: var(--yellow-warning);
         }
-
-        @media (max-width: 768px) {
-            .card-title i {
-                width: 40px;
-                height: 40px;
-                font-size: 1.3rem;
-                padding: 8px;
-            }
+        
+        .sensor-value.normal {
+            color: var(--neon-green);
         }
-
-        /* Enhanced Status Cards */
-        .status-cards {
+        
+        /* Arduino Controls */
+        .arduino-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: var(--spacing-sm);
-        }
-
-        @media (max-width: 480px) {
-            .status-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-xs);
-            }
-        }
-
-        .status-card {
-            background: linear-gradient(135deg, rgba(42, 26, 26, 0.8), rgba(26, 26, 26, 0.9));
-            border-radius: 12px;
-            padding: var(--spacing-md);
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            .status-card {
-                padding: var(--spacing-sm);
-                min-height: 110px;
-            }
-        }
-
-        .status-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-orange), transparent);
-        }
-
-        .status-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary-orange);
-            box-shadow: var(--glow-orange);
-        }
-
-        .status-card.alert {
-            border-color: var(--primary-red);
-            background: linear-gradient(135deg, rgba(58, 26, 26, 0.9), rgba(42, 10, 10, 0.9));
-            animation: alertPulse 1.5s infinite;
-        }
-
-        @keyframes alertPulse {
-            0%, 100% { 
-                box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7),
-                            inset 0 0 20px rgba(255, 68, 68, 0.2);
-            }
-            70% { 
-                box-shadow: 0 0 0 10px rgba(255, 68, 68, 0),
-                            inset 0 0 20px rgba(255, 68, 68, 0.2);
-            }
-        }
-
-        .status-icon {
-            font-size: 2rem;
-            margin-bottom: var(--spacing-xs);
-            color: var(--primary-orange);
-            filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.5));
-        }
-
-        @media (max-width: 768px) {
-            .status-icon {
-                font-size: 1.8rem;
-                margin-bottom: 8px;
-            }
-        }
-
-        .status-card.alert .status-icon {
-            color: var(--primary-red);
-            animation: firePulse 1s infinite;
-        }
-
-        @keyframes firePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .status-text {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-light);
-            line-height: 1.2;
-        }
-
-        @media (max-width: 768px) {
-            .status-text {
-                font-size: 0.85rem;
-            }
-        }
-
-        .status-subtext {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            color: var(--text-dim);
-            line-height: 1.2;
-        }
-
-        @media (max-width: 768px) {
-            .status-subtext {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Single Camera Feed */
-        .single-camera-feed {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            background: #000;
-            margin-bottom: var(--spacing-md);
-            border: 2px solid rgba(255, 107, 53, 0.2);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            .single-camera-feed {
-                height: 250px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .single-camera-feed {
-                height: 200px;
-            }
-        }
-
-        .single-camera-feed video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .camera-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(45deg, 
-                rgba(26, 26, 26, 0.9) 25%, 
-                rgba(42, 42, 42, 0.9) 25%, 
-                rgba(42, 42, 42, 0.9) 50%, 
-                rgba(26, 26, 26, 0.9) 50%, 
-                rgba(26, 26, 26, 0.9) 75%, 
-                rgba(42, 42, 42, 0.9) 75%);
-            background-size: 40px 40px;
-            animation: move 4s linear infinite;
-        }
-
-        .camera-placeholder i {
-            font-size: 2rem;
-            color: var(--text-dim);
-            margin-bottom: var(--spacing-sm);
-            opacity: 0.5;
-        }
-
-        @keyframes move {
-            0% { background-position: 0 0; }
-            100% { background-position: 40px 40px; }
-        }
-
-        .camera-label {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 10;
-        }
-
-        .camera-fire-alert {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 68, 68, 0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 10;
-            animation: pulse 1s infinite;
-        }
-
-        /* Enhanced Camera Controls - Responsive */
-        .camera-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: var(--spacing-sm);
             margin-top: var(--spacing-md);
         }
-
-        @media (max-width: 480px) {
-            .camera-controls {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-xs);
-            }
-        }
-
-        .camera-control-btn {
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-            min-height: 80px;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            .camera-control-btn {
-                padding: 10px;
-                font-size: 0.8rem;
-                min-height: 70px;
-                gap: 6px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .camera-control-btn {
-                padding: 8px;
-                font-size: 0.75rem;
-                min-height: 65px;
-            }
-        }
-
-        .camera-control-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
-        }
-
-        .camera-control-btn:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        .camera-control-btn.danger {
-            background: linear-gradient(135deg, var(--primary-red) 0%, #FF5555 100%);
-        }
-
-        .camera-control-btn.success {
-            background: linear-gradient(135deg, var(--neon-green) 0%, #4CAF50 100%);
-        }
-
-        .camera-control-btn.secondary {
-            background: linear-gradient(135deg, var(--electric-blue) 0%, #118AB2 100%);
-        }
-
-        .camera-control-btn.disabled {
-            background: linear-gradient(135deg, #666, #888);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .camera-control-btn i {
-            font-size: 1.2rem;
-        }
-
-        @media (max-width: 768px) {
-            .camera-control-btn i {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Fullscreen Exit Button */
-        .fullscreen-exit-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 107, 53, 0.9);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .fullscreen-exit-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-        }
-
-        .fullscreen-exit-btn:hover {
-            background: rgba(255, 68, 68, 0.9);
-            transform: scale(1.1);
-        }
-
-        body:fullscreen .fullscreen-exit-btn,
-        body:-webkit-full-screen .fullscreen-exit-btn,
-        body:-moz-full-screen .fullscreen-exit-btn,
-        body:-ms-fullscreen .fullscreen-exit-btn {
-            display: flex;
-        }
-
-        /* Enhanced Water Control - Responsive */
-        .water-control {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-md);
-        }
-
-        @media (min-width: 768px) {
-            .water-control {
-                flex-direction: row;
-                align-items: center;
-                gap: var(--spacing-lg);
-            }
-        }
-
-        .pressure-slider-container {
-            flex: 1;
-            background: rgba(255, 107, 53, 0.1);
-            padding: var(--spacing-md);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 107, 53, 0.2);
-            width: 100%;
-        }
-
-        .pressure-slider {
-            width: 100%;
-            height: 10px;
-            -webkit-appearance: none;
-            background: linear-gradient(90deg, var(--electric-blue), var(--primary-orange));
-            border-radius: 8px;
-            outline: none;
-            margin: var(--spacing-sm) 0;
-        }
-
-        .pressure-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid var(--electric-blue);
-            box-shadow: 0 0 10px rgba(0, 180, 216, 0.8);
-        }
-
-        @media (max-width: 768px) {
-            .pressure-slider {
-                height: 8px;
-            }
-            
-            .pressure-slider::-webkit-slider-thumb {
-                width: 20px;
-                height: 20px;
-            }
-        }
-
-        .pressure-value {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--electric-blue);
-            text-align: center;
-            text-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
-            animation: glow 2s infinite;
-            min-width: 80px;
-        }
-
-        @media (max-width: 768px) {
-            .pressure-value {
-                font-size: 1.8rem;
-                min-width: 70px;
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px rgba(0, 180, 216, 0.5); }
-            50% { text-shadow: 0 0 20px rgba(0, 180, 216, 0.8); }
-        }
-
-        /* Enhanced Connection Panel - Responsive */
-        .connection-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-md);
-        }
-
-        @media (max-width: 480px) {
-            .connection-panel {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-xs);
-            }
-        }
-
-        .connection-btn {
-            padding: var(--spacing-md) var(--spacing-sm);
-            border-radius: 12px;
-            border: 2px solid var(--primary-orange);
-            background: rgba(255, 107, 53, 0.1);
-            color: var(--text-light);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-sm);
-            font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
-            min-height: 100px;
-        }
-
-        @media (max-width: 768px) {
-            .connection-btn {
-                padding: var(--spacing-sm);
-                min-height: 90px;
-                gap: 8px;
-            }
-        }
-
-        .connection-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .connection-btn:hover {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 68, 68, 0.2));
-            transform: translateY(-5px);
-            border-color: var(--secondary-orange);
-            box-shadow: var(--glow-orange);
-        }
-
-        .connection-btn:hover::before {
-            left: 100%;
-        }
-
-        .connection-btn i {
-            font-size: 1.8rem;
-            color: var(--primary-orange);
-        }
-
-        @media (max-width: 768px) {
-            .connection-btn i {
-                font-size: 1.6rem;
-            }
-        }
-
-        .connection-btn .btn-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .connection-btn .btn-label {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Gallery Styles - Responsive */
-        .gallery-container {
-            max-height: 300px;
-            overflow-y: auto;
-            background: rgba(17, 17, 17, 0.9);
-            border-radius: 12px;
-            padding: var(--spacing-md);
-            margin-top: var(--spacing-md);
-            border: 1px solid rgba(255, 107, 53, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .gallery-container {
-                max-height: 250px;
-                padding: var(--spacing-sm);
-            }
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: var(--spacing-sm);
-        }
-
-        @media (max-width: 480px) {
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                gap: var(--spacing-xs);
-            }
-        }
-
-        .gallery-item {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #000;
-            aspect-ratio: 16/9;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .gallery-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
-        }
-
-        .gallery-item img,
-        .gallery-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Enhanced Logs Container */
-        .log-container {
-            max-height: 200px;
-            overflow-y: auto;
-            background: rgba(17, 17, 17, 0.9);
-            border-radius: 12px;
-            padding: var(--spacing-md);
-            margin-top: var(--spacing-md);
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            border: 1px solid rgba(255, 107, 53, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .log-container {
-                max-height: 180px;
-                padding: var(--spacing-sm);
-                font-size: 0.8rem;
-            }
-        }
-
-        .log-entry {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-sm);
-            transition: background 0.2s ease;
-        }
-
-        @media (max-width: 768px) {
-            .log-entry {
-                flex-direction: column;
-                gap: 2px;
-                padding: 6px 0;
-            }
-        }
-
-        .log-entry:hover {
-            background: rgba(255, 107, 53, 0.05);
-        }
-
-        .log-time {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            min-width: 70px;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-            .log-time {
-                min-width: 60px;
-                font-size: 0.75rem;
-            }
-        }
-
-        .log-message {
-            flex: 1;
-            word-break: break-word;
-        }
-
-        .log-entry.alert {
-            color: var(--primary-red);
-        }
-
-        .log-entry.alert .log-time {
-            color: var(--primary-red);
-        }
-
-        .log-entry.info {
-            color: var(--neon-green);
-        }
-
-        .log-entry.warning {
-            color: var(--yellow-warning);
-        }
-
-        .log-entry.water {
-            color: var(--electric-blue);
-        }
-
-        /* Enhanced Settings */
-        .settings-controls {
-            margin-top: var(--spacing-md);
-        }
-
-        .setting-item {
-            margin-bottom: var(--spacing-sm);
-            padding: var(--spacing-sm);
-            background: rgba(255, 107, 53, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 107, 53, 0.1);
-        }
-
-        .setting-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
-
-        @media (max-width: 768px) {
-            .setting-label {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
+        
+        /* Connection Status Dot */
+        .connection-dot {
             display: inline-block;
-            width: 54px;
-            height: 28px;
-        }
-
-        @media (max-width: 768px) {
-            .toggle-switch {
-                width: 50px;
-                height: 26px;
-            }
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-hover);
-            transition: .4s;
-            border-radius: 30px;
-            border: 2px solid var(--primary-orange);
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: var(--primary-orange);
-            transition: .4s;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
+            margin-right: 6px;
         }
-
-        @media (max-width: 768px) {
-            .slider:before {
-                height: 18px;
-                width: 18px;
-            }
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-orange);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-            background-color: white;
-        }
-
-        @media (max-width: 768px) {
-            input:checked + .slider:before {
-                transform: translateX(24px);
-            }
-        }
-
-        /* Enhanced Stats - Responsive */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-md);
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--spacing-xs);
-            }
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            background: rgba(255, 107, 53, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 107, 53, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .stat-item {
-                padding: 8px 10px;
-            }
-        }
-
-        .stat-label {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 768px) {
-            .stat-label {
-                font-size: 0.8rem;
-            }
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .stat-value {
-                font-size: 0.9rem;
-            }
-        }
-
-        /* IMPROVED Fire Alert Modal - Enhanced for mobile */
-        #fireAlertModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 20000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: modalFadeIn 0.3s ease;
-            padding: var(--spacing-sm);
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fire-alert-content {
-            background: linear-gradient(135deg, #3A0A0A 0%, #5A0A0A 30%, #8B0000 100%);
-            padding: var(--spacing-lg);
-            border-radius: var(--border-radius);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 4px solid var(--primary-red);
-            box-shadow: 
-                0 0 60px rgba(255, 68, 68, 0.8),
-                inset 0 0 30px rgba(255, 68, 68, 0.4),
-                0 0 0 15px rgba(255, 68, 68, 0.2);
-            animation: alertGlow 2s infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-content {
-                padding: var(--spacing-md);
-                max-height: 85vh;
-                max-width: 95%;
-            }
-        }
-
-        @keyframes alertGlow {
-            0%, 100% { 
-                box-shadow: 
-                    0 0 60px rgba(255, 68, 68, 0.8),
-                    inset 0 0 30px rgba(255, 68, 68, 0.4),
-                    0 0 0 15px rgba(255, 68, 68, 0.2);
-            }
-            50% { 
-                box-shadow: 
-                    0 0 100px rgba(255, 68, 68, 1),
-                    inset 0 0 50px rgba(255, 68, 68, 0.6),
-                    0 0 0 20px rgba(255, 68, 68, 0.3);
-            }
-        }
-
-        .fire-alert-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at center, transparent 30%, rgba(255, 68, 68, 0.1) 70%),
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 10px,
-                    rgba(255, 68, 68, 0.1) 10px,
-                    rgba(255, 68, 68, 0.1) 20px
-                );
-            animation: pulseBackground 2s infinite;
-            z-index: 1;
-        }
-
-        @keyframes pulseBackground {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .fire-alert-icon {
-            font-size: 4rem;
-            color: var(--primary-red);
-            margin-bottom: var(--spacing-md);
-            animation: fireAlertIcon 1s infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 68, 68, 0.8));
-            position: relative;
-            z-index: 2;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-icon {
-                font-size: 3rem;
-                margin-bottom: var(--spacing-sm);
-            }
-        }
-
-        @keyframes fireAlertIcon {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg); 
-                filter: drop-shadow(0 0 15px rgba(255, 68, 68, 0.8));
-            }
-            25% { 
-                transform: scale(1.2) rotate(-5deg); 
-                filter: drop-shadow(0 0 25px rgba(255, 68, 68, 1));
-            }
-            75% { 
-                transform: scale(1.2) rotate(5deg); 
-                filter: drop-shadow(0 0 25px rgba(255, 68, 68, 1));
-            }
-        }
-
-        .fire-alert-content h2 {
-            color: white;
-            font-size: 2rem;
-            margin-bottom: var(--spacing-sm);
-            text-shadow: 
-                0 0 8px rgba(255, 255, 255, 0.7),
-                0 0 15px rgba(255, 68, 68, 0.8),
-                0 0 25px rgba(255, 68, 68, 0.6);
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 2;
-            animation: textPulse 1s infinite;
-            line-height: 1.2;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-content h2 {
-                font-size: 1.6rem;
-            }
-        }
-
-        @keyframes textPulse {
-            0%, 100% { 
-                text-shadow: 
-                    0 0 8px rgba(255, 255, 255, 0.7),
-                    0 0 15px rgba(255, 68, 68, 0.8),
-                    0 0 25px rgba(255, 68, 68, 0.6);
-            }
-            50% { 
-                text-shadow: 
-                    0 0 12px rgba(255, 255, 255, 0.9),
-                    0 0 25px rgba(255, 68, 68, 1),
-                    0 0 35px rgba(255, 68, 68, 0.8);
-            }
-        }
-
-        .fire-alert-content p {
-            color: var(--light-orange);
-            margin-bottom: var(--spacing-md);
-            font-size: 1.1rem;
-            line-height: 1.4;
-            position: relative;
-            z-index: 2;
-            font-weight: 500;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-content p {
-                font-size: 1rem;
-                margin-bottom: var(--spacing-sm);
-            }
-        }
-
-        .fire-alert-info {
-            background: rgba(0, 0, 0, 0.6);
-            padding: var(--spacing-md);
-            border-radius: 12px;
-            margin: var(--spacing-md) 0;
-            border: 2px solid rgba(255, 107, 53, 0.5);
-            position: relative;
-            z-index: 2;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-info {
-                padding: var(--spacing-sm);
-                margin: var(--spacing-sm) 0;
-            }
-        }
-
-        .fire-alert-info p {
-            margin-bottom: 8px;
-            font-size: 1rem;
-            color: white;
-            text-align: left;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-info p {
-                font-size: 0.9rem;
-                margin-bottom: 6px;
-            }
-        }
-
-        .fire-alert-info i {
-            color: var(--yellow-warning);
-            margin-right: 8px;
-            width: 16px;
-            text-align: center;
-        }
-
-        .alert-acknowledge-btn {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 
-                0 6px 20px rgba(255, 68, 68, 0.5),
-                0 0 0 4px rgba(255, 68, 68, 0.3);
-            position: relative;
-            z-index: 2;
-            margin-top: var(--spacing-md);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .alert-acknowledge-btn {
-                padding: 12px 20px;
-                font-size: 0.95rem;
-                margin-top: var(--spacing-sm);
-            }
-        }
-
-        .alert-acknowledge-btn:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 
-                0 8px 30px rgba(255, 68, 68, 0.7),
-                0 0 0 6px rgba(255, 68, 68, 0.4);
-            background: linear-gradient(135deg, #FF0000, var(--primary-red));
-        }
-
-        .alert-acknowledge-btn:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        .alert-acknowledge-btn i {
-            font-size: 1.2rem;
-        }
-
-        /* Live Indicators */
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 8px;
-        }
-
-        .live-dot {
-            width: 6px;
-            height: 6px;
+        
+        .connection-dot.connected {
             background: var(--neon-green);
-            border-radius: 50%;
-            animation: livePulse 1.5s infinite;
+            box-shadow: 0 0 10px var(--neon-green);
         }
-
-        @keyframes livePulse {
-            0%, 100% { 
-                opacity: 1; 
-                box-shadow: 0 0 0 0 rgba(57, 255, 20, 0.7); 
-            }
-            50% { 
-                opacity: 0.7; 
-                box-shadow: 0 0 0 6px rgba(57, 255, 20, 0); 
-            }
+        
+        .connection-dot.disconnected {
+            background: var(--text-dim);
         }
-
-        /* Loading Animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid transparent;
-            border-top: 4px solid var(--primary-orange);
-            border-right: 4px solid var(--electric-blue);
-            border-bottom: 4px solid var(--neon-green);
-            border-left: 4px solid var(--primary-red);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Notification System */
-        .notification-center {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            max-width: 350px;
-            width: calc(100% - 40px);
-        }
-
-        @media (max-width: 768px) {
-            .notification-center {
-                max-width: 100%;
-                left: 20px;
-                right: 20px;
-                top: 10px;
-            }
-        }
-
-        .notification {
-            background: rgba(21, 21, 21, 0.95);
-            border-left: 4px solid var(--primary-orange);
-            padding: var(--spacing-sm);
-            margin-bottom: 8px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transform: translateX(100%);
-            animation: slideIn 0.3s ease forwards;
-            backdrop-filter: blur(10px);
-        }
-
-        @keyframes slideIn {
-            to { transform: translateX(0); }
-        }
-
-        .notification.success {
-            border-left-color: var(--neon-green);
-        }
-
-        .notification.error {
-            border-left-color: var(--primary-red);
-        }
-
-        .notification.warning {
-            border-left-color: var(--yellow-warning);
-        }
-
-        .notification.info {
-            border-left-color: var(--electric-blue);
-        }
-
-        .notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .notification-close {
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 1.2rem;
-            line-height: 1;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notification-message {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            line-height: 1.3;
-        }
-
-        /* Water Spray Animation */
-        .water-spray-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5000;
-            display: none;
-        }
-
-        .water-droplet {
+        
+        /* Arduino Alert in Camera Feed */
+        .arduino-fire-alert {
             position: absolute;
-            background: rgba(0, 180, 216, 0.7);
-            border-radius: 50%;
-            animation: waterFall 2s linear forwards;
-        }
-
-        @keyframes waterFall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        /* Column Layout */
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-lg);
-        }
-
-        /* Stream URL Input */
-        #streamUrl {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            background: rgba(255, 107, 53, 0.05);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 68, 68, 0.9);
             color: white;
-            font-size: 0.9rem;
-            margin-top: var(--spacing-sm);
-        }
-
-        @media (max-width: 768px) {
-            #streamUrl {
-                padding: 10px;
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Hidden audio element for fire alarm */
-        #fireAlarmSound {
-            display: none;
-        }
-
-        /* Mobile-specific optimizations */
-        @media (max-width: 768px) {
-            /* Improve button sizes for mobile */
-            .camera-control-btn,
-            .connection-btn {
-                min-height: 60px;
-                font-size: 0.8rem;
-                padding: 8px;
-            }
-            
-            /* Improve text readability */
-            .status-text {
-                font-size: 0.85rem;
-            }
-            
-            .status-subtext {
-                font-size: 0.75rem;
-            }
-            
-            /* Better spacing */
-            .card {
-                margin-bottom: var(--spacing-sm);
-            }
-            
-            /* Fullscreen modal improvements */
-            .fire-alert-content {
-                animation: mobileAlertShake 0.5s ease;
-            }
-            
-            @keyframes mobileAlertShake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
-            }
-        }
-
-        /* Small mobile improvements */
-        @media (max-width: 480px) {
-            /* Make everything more compact */
-            .dashboard-grid {
-                gap: var(--spacing-md);
-            }
-            
-            .column {
-                gap: var(--spacing-md);
-            }
-            
-            /* Single column layout for very small screens */
-            .connection-panel,
-            .camera-controls,
-            .status-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            /* Adjust header for very small screens */
-            .logo-container {
-                flex-direction: column;
-                gap: var(--spacing-xs);
-            }
-            
-            .logo {
-                font-size: 1.6rem;
-            }
-            
-            .logo-icon {
-                font-size: 1.8rem;
-            }
-        }
-
-        /* Touch-friendly improvements */
-        button, 
-        .connection-btn, 
-        .camera-control-btn,
-        .toggle-switch {
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        /* Prevent zoom on input focus on mobile */
-        @media (max-width: 768px) {
-            input, textarea, select {
-                font-size: 16px; /* Prevents iOS zoom */
-            }
-        }
-
-        /* Utility classes */
-        .text-center {
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            z-index: 100;
+            animation: alertPulse 1s infinite;
             text-align: center;
-        }
-
-        .mt-1 { margin-top: var(--spacing-xs); }
-        .mt-2 { margin-top: var(--spacing-sm); }
-        .mt-3 { margin-top: var(--spacing-md); }
-        .mt-4 { margin-top: var(--spacing-lg); }
-
-        .mb-1 { margin-bottom: var(--spacing-xs); }
-        .mb-2 { margin-bottom: var(--spacing-sm); }
-        .mb-3 { margin-bottom: var(--spacing-md); }
-        .mb-4 { margin-bottom: var(--spacing-lg); }
-
-        /* Accessibility improvements */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            :root {
-                --primary-red: #FF0000;
-                --primary-orange: #FF5500;
-                --electric-blue: #0088FF;
-                --neon-green: #00FF00;
-                --text-light: #FFFFFF;
-                --text-dim: #CCCCCC;
-            }
-        }
-
-        /* Battery saving mode */
-        @media (prefers-reduced-data: reduce) {
-            .camera-placeholder {
-                animation: none;
-                background: var(--bg-card);
-            }
-            
-            .water-droplet {
-                display: none;
-            }
+            border: 3px solid white;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.8);
         }
     </style>
 </head>
 <body>
+    <!-- === KEEP ALL YOUR ORIGINAL HTML === -->
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
@@ -1716,13 +154,11 @@
     <!-- Water Spray Effect -->
     <div class="water-spray-effect" id="waterSprayEffect"></div>
 
-    <!-- Fire Alarm Sound (hidden) -->
-    <audio id="fireAlarmSound" preload="auto" loop>
-        <!-- We'll generate fire alarm sound with Web Audio API -->
-    </audio>
+    <!-- Fire Alarm Sound -->
+    <audio id="fireAlarmSound" preload="auto" loop></audio>
 
     <!-- Fullscreen Exit Button -->
-    <button class="fullscreen-exit-btn" onclick="exitFullscreen()" title="Exit Fullscreen" aria-label="Exit fullscreen mode">
+    <button class="fullscreen-exit-btn" onclick="exitFullscreen()" title="Exit Fullscreen">
         <i class="fas fa-times"></i>
     </button>
 
@@ -1737,6 +173,10 @@
             <div class="live-indicator">
                 <span class="live-dot"></span>
                 <span>LIVE MONITORING</span>
+                <span id="arduinoConnectionStatus" style="margin-left: 15px; font-size: 0.8rem;">
+                    <span class="connection-dot disconnected" id="connectionDot"></span>
+                    Arduino: <span id="arduinoStatusText">Disconnected</span>
+                </span>
             </div>
         </div>
 
@@ -1744,7 +184,7 @@
         <div class="dashboard-grid">
             <!-- Left Column -->
             <div class="column">
-                <!-- System Status -->
+                <!-- System Status (UPDATED with Arduino) -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-shield-alt"></i>
@@ -1767,86 +207,79 @@
                             <div class="status-subtext">Pressure: 0%</div>
                         </div>
 
+                        <!-- NEW: Arduino Status Card -->
+                        <div class="status-card arduino-disconnected" id="arduinoStatusCard">
+                            <div class="status-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="status-text" id="arduinoCardText">ARDUINO OFFLINE</div>
+                            <div class="status-subtext" id="arduinoCardSubtext">Click to Connect</div>
+                        </div>
+
                         <div class="status-card" id="cameraStatus">
                             <div class="status-icon">
                                 <i class="fas fa-video"></i>
                             </div>
                             <div class="status-text">CAMERA OFFLINE</div>
-                            <div class="status-subtext">Single Camera System</div>
+                            <div class="status-subtext">Click "Connect Camera"</div>
                         </div>
-
-                        <div class="status-card" id="recordingStatus">
-                            <div class="status-icon">
-                                <i class="fas fa-record-vinyl"></i>
-                            </div>
-                            <div class="status-text">NOT RECORDING</div>
-                            <div class="status-subtext">Idle</div>
+                    </div>
+                    
+                    <!-- NEW: Sensor Values Display -->
+                    <div class="sensor-display" id="sensorDisplay" style="display: none;">
+                        <div class="sensor-item">
+                            <div class="sensor-label">Sensor 1 (A0)</div>
+                            <div class="sensor-value normal" id="sensor1Value">800</div>
                         </div>
+                        <div class="sensor-item">
+                            <div class="sensor-label">Sensor 2 (A1)</div>
+                            <div class="sensor-value normal" id="sensor2Value">800</div>
+                        </div>
+                        <div class="sensor-item">
+                            <div class="sensor-label">Sensor 3 (A2)</div>
+                            <div class="sensor-value normal" id="sensor3Value">800</div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW: Arduino Controls -->
+                    <div class="arduino-controls" id="arduinoControls" style="display: none;">
+                        <button class="camera-control-btn secondary" onclick="arduinoCommand.testConnection()">
+                            <i class="fas fa-bolt"></i>
+                            Test Connection
+                        </button>
+                        <button class="camera-control-btn" onclick="arduinoCommand.simulateFire()">
+                            <i class="fas fa-fire"></i>
+                            Simulate Fire
+                        </button>
+                        <button class="camera-control-btn success" onclick="arduinoCommand.connect()">
+                            <i class="fas fa-plug"></i>
+                            Reconnect
+                        </button>
                     </div>
                 </div>
 
-                <!-- Enhanced Camera Connection with Bluetooth -->
+                <!-- Keep the rest of your original HTML structure -->
+                <!-- Camera Connection, Gallery, etc. -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-wifi"></i>
                         Camera Connection
                     </h2>
-                    <div class="connection-panel">
-                        <button class="connection-btn" onclick="connectCamera('wifi')">
-                            <i class="fas fa-wifi"></i>
-                            <span class="btn-label">WiFi Camera</span>
-                        </button>
-
-                        <button class="connection-btn" onclick="connectCamera('rtsp')">
-                            <i class="fas fa-satellite-dish"></i>
-                            <span class="btn-label">RTSP Stream</span>
-                        </button>
-
-                        <button class="connection-btn" onclick="connectCamera('bluetooth')">
-                            <i class="fas fa-bluetooth-b"></i>
-                            <span class="btn-label">Bluetooth</span>
-                        </button>
-
-                        <button class="connection-btn" onclick="connectCamera('webcam')">
-                            <i class="fas fa-camera"></i>
-                            <span class="btn-label">Webcam</span>
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: var(--spacing-sm);">
-                        <input type="text" id="streamUrl" 
-                               placeholder="Enter RTSP URL (e.g., rtsp://username:password@192.168.1.100:554/stream)">
-                    </div>
+                    <!-- ... rest of your camera connection code ... -->
                 </div>
 
-                <!-- Enhanced Gallery -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-images"></i>
                         Media Gallery
-                        <button class="camera-control-btn" onclick="clearGallery()" 
-                                style="margin-left: auto; padding: 6px 12px; font-size: 0.75rem;">
-                            <i class="fas fa-trash"></i>
-                            Clear All
-                        </button>
                     </h2>
-                    
-                    <div class="gallery-container" id="galleryContainer">
-                        <div class="gallery-grid" id="galleryGrid">
-                            <!-- Gallery items will be added here -->
-                        </div>
-                        <div id="emptyGallery" style="text-align: center; padding: 30px; color: var(--text-dim);">
-                            <i class="fas fa-images" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                            <p>No media captured yet</p>
-                            <p style="font-size: 0.85rem; margin-top: 8px;">Snapshots and recordings will appear here</p>
-                        </div>
-                    </div>
+                    <!-- ... rest of your gallery code ... -->
                 </div>
             </div>
 
             <!-- Center Column -->
             <div class="column">
-                <!-- Live Camera Feed -->
+                <!-- Live Camera Feed with Arduino Alert -->
                 <div class="card" id="cameraCard">
                     <h2 class="card-title">
                         <i class="fas fa-eye"></i>
@@ -1856,6 +289,13 @@
                             <span style="font-size: 0.75rem;">SINGLE CAMERA</span>
                         </span>
                     </h2>
+                    
+                    <!-- Arduino Fire Alert Overlay -->
+                    <div id="arduinoFireAlert" class="arduino-fire-alert" style="display: none;">
+                        <i class="fas fa-fire" style="margin-right: 10px;"></i>
+                        ARDUINO FIRE ALERT!
+                        <div style="font-size: 0.9rem; margin-top: 5px;" id="arduinoAlertLocation"></div>
+                    </div>
                     
                     <!-- Single Camera View -->
                     <div class="single-camera-feed" id="singleCameraView">
@@ -1873,230 +313,65 @@
                     
                     <!-- Camera Controls -->
                     <div class="camera-controls">
-                        <button class="camera-control-btn success" onclick="startRecording()" id="recordBtn">
-                            <i class="fas fa-record-vinyl"></i>
-                            Start Recording
-                        </button>
-                        <button class="camera-control-btn danger disabled" onclick="stopRecording()" id="stopBtn">
-                            <i class="fas fa-stop"></i>
-                            Stop Recording
-                        </button>
-                        <button class="camera-control-btn secondary" onclick="captureSnapshot()" id="snapshotBtn">
-                            <i class="fas fa-camera"></i>
-                            Take Snapshot
-                        </button>
-                        <button class="camera-control-btn" onclick="toggleFullscreen()">
-                            <i class="fas fa-expand"></i>
-                            Fullscreen
-                        </button>
+                        <!-- ... your existing camera controls ... -->
                     </div>
                 </div>
 
-                <!-- Enhanced Water Control -->
+                <!-- Water Control System -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-tint"></i>
                         Water Control System
                     </h2>
-                    
-                    <div class="water-control">
-                        <div class="pressure-slider-container">
-                            <label class="setting-label">Pressure Control</label>
-                            <input type="range" min="0" max="100" value="80" 
-                                   class="pressure-slider" id="pressureSlider" 
-                                   oninput="updatePressure(this.value)">
-                            <div style="display: flex; justify-content: space-between; color: var(--text-dim); font-size: 0.85rem;">
-                                <span>Low</span>
-                                <span>Medium</span>
-                                <span>High</span>
-                            </div>
-                        </div>
-                        
-                        <div class="pressure-value" id="pressureValue">80%</div>
-                    </div>
-                    
-                    <div class="camera-controls" style="margin-top: var(--spacing-md);">
-                        <button class="camera-control-btn success" onclick="activateWater()" id="activateWaterBtn">
-                            <i class="fas fa-play"></i>
-                            Activate Water
-                        </button>
-                        <button class="camera-control-btn danger disabled" onclick="deactivateWater()" id="deactivateWaterBtn">
-                            <i class="fas fa-stop"></i>
-                            Stop Water
-                        </button>
-                        <button class="camera-control-btn secondary" onclick="testSprinkler()">
-                            <i class="fas fa-spray-can"></i>
-                            Test Sprinkler
-                        </button>
-                        <button class="camera-control-btn" onclick="emergencyStop()">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Emergency Stop
-                        </button>
-                    </div>
+                    <!-- ... your existing water control code ... -->
                 </div>
             </div>
 
             <!-- Right Column -->
             <div class="column">
-                <!-- Enhanced System Logs -->
+                <!-- System Logs -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-clipboard-list"></i>
                         System Logs
-                        <button class="camera-control-btn" onclick="clearLogs()" 
-                                style="margin-left: auto; padding: 6px 12px; font-size: 0.75rem;">
-                            <i class="fas fa-trash"></i>
-                            Clear
-                        </button>
                     </h2>
-                    
-                    <div class="log-container" id="logContainer">
-                        <div class="log-entry info">
-                            <span class="log-time">00:00:00</span>
-                            <span class="log-message">System initialized successfully</span>
-                        </div>
-                        <div class="log-entry info">
-                            <span class="log-time">00:00:01</span>
-                            <span class="log-message">Single camera mode active</span>
-                        </div>
-                        <div class="log-entry water">
-                            <span class="log-time">00:00:02</span>
-                            <span class="log-message">Water control system ready</span>
-                        </div>
-                        <div class="log-entry">
-                            <span class="log-time">00:00:03</span>
-                            <span class="log-message">Click "Connect Camera" to connect camera</span>
-                        </div>
-                    </div>
+                    <!-- ... your existing logs code ... -->
                 </div>
 
-                <!-- Enhanced Settings -->
+                <!-- System Settings -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-cog"></i>
                         System Settings
                     </h2>
-                    
-                    <div class="settings-controls">
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Auto Water Activation</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="autoWaterToggle" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Push Notifications</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="pushNotifications" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Sound Alerts</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="soundAlerts" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="setting-label">Auto-save Media</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="autoSaveMedia" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- ... your existing settings code ... -->
                 </div>
 
-                <!-- Enhanced Quick Stats -->
+                <!-- System Statistics -->
                 <div class="card">
                     <h2 class="card-title">
                         <i class="fas fa-chart-bar"></i>
                         System Statistics
                     </h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-label">Active Cameras</span>
-                            <span class="stat-value" id="statCameras">0/1</span>
-                        </div>
-                        
-                        <div class="stat-item">
-                            <span class="stat-label">Fire Detections</span>
-                            <span class="stat-value" id="statFires">0</span>
-                        </div>
-                        
-                        <div class="stat-item">
-                            <span class="stat-label">Water Activations</span>
-                            <span class="stat-value" id="statWater">0</span>
-                        </div>
-                        
-                        <div class="stat-item">
-                            <span class="stat-label">Media Files</span>
-                            <span class="stat-value" id="statMedia">0</span>
-                        </div>
-                        
-                        <div class="stat-item">
-                            <span class="stat-label">Uptime</span>
-                            <span class="stat-value" id="statUptime">00:00:00</span>
-                        </div>
-                        
-                        <div class="stat-item">
-                            <span class="stat-label">Storage Used</span>
-                            <span class="stat-value" id="statStorage">0 MB</span>
-                        </div>
-                    </div>
+                    <!-- ... your existing stats code ... -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- IMPROVED Fire Alert Modal -->
+    <!-- Fire Alert Modal -->
     <div id="fireAlertModal">
         <div class="fire-alert-content">
-            <i class="fas fa-fire fire-alert-icon"></i>
-            <h2>🚨 FIRE DETECTED! 🚨</h2>
-            <p id="fireAlertMessage">EMERGENCY! Fire has been detected. Water suppression system is activating automatically.</p>
-            
-            <div class="fire-alert-info">
-                <p><i class="fas fa-exclamation-triangle"></i> 
-                <strong>Location:</strong> Camera 1 - Main Area</p>
-                <p><i class="fas fa-fire"></i> 
-                <strong>Fire Size:</strong> <span id="fireSizeEstimate" style="color: var(--yellow-warning); font-weight: bold;">MEDIUM</span></p>
-                <p><i class="fas fa-clock"></i> 
-                <strong>Time Detected:</strong> <span id="fireTimeDetected">Just now</span></p>
-                <p><i class="fas fa-tint"></i> 
-                <strong>Response:</strong> Water suppression system <span style="color: var(--electric-blue); font-weight: bold;">ACTIVATED</span></p>
-            </div>
-            
-            <p style="color: white; font-size: 1rem; margin-top: var(--spacing-sm);">
-                <i class="fas fa-volume-up"></i> 
-                <strong>Fire alarm is active</strong> - It will continue until acknowledged
-            </p>
-            
-            <button class="alert-acknowledge-btn" onclick="closeFireAlert()" id="acknowledgeAlertBtn">
-                <i class="fas fa-bell-slash"></i>
-                ACKNOWLEDGE ALERT & STOP ALARM
-            </button>
+            <!-- ... your existing modal code ... -->
         </div>
     </div>
 
     <script>
-        // Simplified APULA Application with Single Camera
+        // === KEEP YOUR ORIGINAL APULAApp CLASS ===
+        // Copy ALL your original JavaScript here
         class APULAApp {
             constructor() {
+                // Your original constructor code
                 this.camera = { stream: null, mediaRecorder: null, isActive: false };
                 this.isRecording = false;
                 this.recordedChunks = [];
@@ -2122,6 +397,7 @@
             }
             
             init() {
+                // Your original init code
                 this.loadFromLocalStorage();
                 this.bindEvents();
                 this.updateStats();
@@ -2139,1241 +415,211 @@
                 // Initialize Web Audio API for fire alarm
                 this.initializeAudioContext();
                 
-                // Check if mobile device
-                this.isMobile = this.checkIfMobile();
-                
-                // Add mobile-specific optimizations
-                if (this.isMobile) {
-                    this.optimizeForMobile();
-                }
+                // Initialize Arduino connection
+                this.initArduinoConnection();
             }
             
-            checkIfMobile() {
-                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
+            // ... ALL your original methods ...
+            // loadFromLocalStorage, saveToLocalStorage, bindEvents, etc.
+            // addCamera, startRecording, stopRecording, captureSnapshot, etc.
+            // handleFireDetection, closeFireAlert, etc.
             
-            optimizeForMobile() {
-                // Add touch-friendly improvements
-                document.documentElement.style.setProperty('--border-radius', '12px');
-                document.documentElement.style.setProperty('--spacing-xs', '8px');
-                document.documentElement.style.setProperty('--spacing-sm', '12px');
-                document.documentElement.style.setProperty('--spacing-md', '16px');
-                document.documentElement.style.setProperty('--spacing-lg', '20px');
-                
-                // Disable some heavy animations on mobile
-                const style = document.createElement('style');
-                style.textContent = `
-                    @media (max-width: 768px) {
-                        .camera-placeholder {
-                            animation: none;
-                        }
-                        .status-card.alert {
-                            animation-duration: 3s;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
+            // === NEW: ARDUINO INTEGRATION METHODS ===
             
-            initializeAudioContext() {
-                try {
-                    if (window.AudioContext || window.webkitAudioContext) {
-                        this.fireAlarmAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        this.showNotification('Audio System', 'Fire alarm system ready', 'info');
-                    }
-                } catch (error) {
-                    console.error('Audio Context not supported:', error);
-                    this.showNotification('Audio Error', 'Fire alarm sound may not work in this browser', 'warning');
-                }
-            }
-            
-            loadFromLocalStorage() {
-                // Load gallery from localStorage
-                const savedGallery = localStorage.getItem('apula_gallery');
-                if (savedGallery) {
-                    try {
-                        this.mediaGallery = JSON.parse(savedGallery);
-                        this.addLog('Loaded gallery from local storage', 'info');
-                    } catch (e) {
-                        console.error('Failed to load gallery:', e);
-                        this.mediaGallery = [];
-                    }
-                }
+            initArduinoConnection() {
+                // Determine WebSocket URL
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const host = window.location.hostname;
+                const port = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
+                const wsUrl = `${protocol}//${host}:${port}/arduino-ws`;
                 
-                // Load stats
-                const savedStats = localStorage.getItem('apula_stats');
-                if (savedStats) {
-                    try {
-                        const stats = JSON.parse(savedStats);
-                        this.stats.fires = stats.fires || 0;
-                        this.stats.waterActivations = stats.waterActivations || 0;
-                        this.stats.mediaCount = stats.mediaCount || 0;
-                        this.stats.storageUsed = stats.storageUsed || 0;
-                    } catch (e) {
-                        console.error('Failed to load stats:', e);
-                    }
-                }
-            }
-            
-            saveToLocalStorage() {
-                try {
-                    // Save gallery
-                    localStorage.setItem('apula_gallery', JSON.stringify(this.mediaGallery));
-                    
-                    // Save stats
-                    localStorage.setItem('apula_stats', JSON.stringify({
-                        fires: this.stats.fires,
-                        waterActivations: this.stats.waterActivations,
-                        mediaCount: this.stats.mediaCount,
-                        storageUsed: this.stats.storageUsed
-                    }));
-                    
-                } catch (e) {
-                    console.error('Failed to save to localStorage:', e);
-                }
-            }
-            
-            bindEvents() {
-                // Toggle switches
-                document.getElementById('autoWaterToggle').addEventListener('change', (e) => {
-                    this.showNotification('Auto Water', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                    this.addLog(`Auto Water Activation ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-                });
+                console.log('Connecting to Arduino WebSocket:', wsUrl);
                 
-                document.getElementById('pushNotifications').addEventListener('change', (e) => {
-                    this.showNotification('Push Notifications', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                });
+                this.arduinoWS = new WebSocket(wsUrl);
+                this.arduinoConnected = false;
+                this.sensorValues = [800, 800, 800];
                 
-                document.getElementById('soundAlerts').addEventListener('change', (e) => {
-                    this.showNotification('Sound Alerts', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                });
-                
-                document.getElementById('autoSaveMedia').addEventListener('change', (e) => {
-                    this.showNotification('Auto-save Media', 
-                        e.target.checked ? 'Enabled' : 'Disabled', 
-                        'info');
-                    this.addLog(`Auto-save media ${e.target.checked ? 'enabled' : 'disabled'}`, 'info');
-                });
-                
-                // Add test fire detection button
-                this.addTestFireButton();
-                
-                // Save to localStorage before page unload
-                window.addEventListener('beforeunload', () => {
-                    this.saveToLocalStorage();
-                    this.stopFireAlarm(); // Stop alarm if active
-                });
-                
-                // Handle page visibility changes
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden && this.fireAlarmActive) {
-                        // Resume alarm if page becomes visible again
-                        this.startFireAlarm();
-                    }
-                });
-                
-                // Handle orientation changes for mobile
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => {
-                        this.handleResize();
-                    }, 300);
-                });
-                
-                // Handle window resize
-                window.addEventListener('resize', () => {
-                    this.handleResize();
-                });
-            }
-            
-            handleResize() {
-                // Update any responsive elements
-                const cameraFeed = document.getElementById('singleCameraView');
-                if (cameraFeed) {
-                    if (window.innerWidth < 768) {
-                        cameraFeed.style.height = '200px';
-                    } else {
-                        cameraFeed.style.height = '300px';
-                    }
-                }
-            }
-            
-            async addCamera() {
-                if (this.camera.isActive) {
-                    this.showNotification('Camera Already Active', 
-                        'Camera is already connected', 
-                        'warning');
-                    return;
-                }
-                
-                this.showLoading(true);
-                
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { 
-                            width: { ideal: this.isMobile ? 640 : 1280 },
-                            height: { ideal: this.isMobile ? 480 : 720 },
-                            frameRate: { ideal: 30 }
-                        },
-                        audio: false
-                    });
-                    
-                    // Set up camera feed
-                    const videoElement = document.getElementById('cameraFeed1');
-                    videoElement.srcObject = stream;
-                    videoElement.style.display = 'block';
-                    document.getElementById('cameraPlaceholder1').style.display = 'none';
-                    
-                    // Store camera data
-                    this.camera.stream = stream;
-                    this.camera.isActive = true;
-                    
-                    // Initialize MediaRecorder
-                    this.setupMediaRecorder(stream);
-                    
-                    // Update status
-                    this.stats.activeCameras = 1;
-                    this.updateCameraStatus();
-                    this.updateStats();
-                    
-                    this.showNotification('Camera Connected', 
-                        'Camera connected successfully', 
-                        'success');
-                    this.addLog('Camera connected successfully', 'info');
-                    
-                    // Enable recording button
-                    document.getElementById('recordBtn').classList.remove('disabled');
-                    
-                } catch (error) {
-                    this.showNotification('Camera Error', 
-                        `Failed to access camera: ${error.message}`, 
-                        'error');
-                    this.addLog(`Failed to connect camera: ${error.message}`, 'alert');
-                } finally {
-                    this.showLoading(false);
-                }
-            }
-            
-            setupMediaRecorder(stream) {
-                try {
-                    // Use lower quality for mobile to save bandwidth
-                    const videoBitsPerSecond = this.isMobile ? 1000000 : 2500000;
-                    
-                    const options = { 
-                        mimeType: 'video/webm;codecs=vp9,opus',
-                        videoBitsPerSecond: videoBitsPerSecond,
-                        audioBitsPerSecond: 128000
-                    };
-                    
-                    this.camera.mediaRecorder = new MediaRecorder(stream, options);
-                    
-                    this.camera.mediaRecorder.ondataavailable = (event) => {
-                        if (event.data.size > 0) {
-                            this.recordedChunks.push(event.data);
-                        }
-                    };
-                    
-                    this.camera.mediaRecorder.onstop = () => {
-                        this.saveRecording();
-                    };
-                    
-                } catch (error) {
-                    console.error('MediaRecorder setup error:', error);
-                    // Try with default options
-                    try {
-                        this.camera.mediaRecorder = new MediaRecorder(stream);
-                        this.camera.mediaRecorder.ondataavailable = (event) => {
-                            if (event.data.size > 0) {
-                                this.recordedChunks.push(event.data);
-                            }
-                        };
-                        this.camera.mediaRecorder.onstop = () => {
-                            this.saveRecording();
-                        };
-                    } catch (e) {
-                        console.error('Failed to setup MediaRecorder:', e);
-                    }
-                }
-            }
-            
-            async connectCamera(type) {
-                if (type === 'bluetooth') {
-                    this.showNotification('Bluetooth Connection', 
-                        'Searching for Bluetooth cameras...', 
-                        'info');
-                    this.addLog('Initiating Bluetooth camera connection', 'info');
-                    
-                    // Simulate Bluetooth connection
-                    setTimeout(() => {
-                        this.showNotification('Bluetooth Connected', 
-                            'Bluetooth camera connected successfully', 
-                            'success');
-                        this.addLog('Bluetooth camera connected successfully', 'info');
-                    }, 1500);
-                } else if (type === 'webcam') {
-                    this.addCamera();
-                } else {
-                    this.showNotification('Camera Connection', 
-                        `Use "Connect Camera" button to connect a ${type} camera`, 
-                        'info');
-                    this.addLog(`Camera connection type selected: ${type}`, 'info');
-                    
-                    // For RTSP, show the input field
-                    if (type === 'rtsp') {
-                        document.getElementById('streamUrl').focus();
-                    }
-                }
-            }
-            
-            startRecording() {
-                if (!this.camera.isActive) {
-                    this.showNotification('Recording Error', 'No camera connected', 'error');
-                    return;
-                }
-                
-                if (this.isRecording) {
-                    this.showNotification('Recording Error', 'Already recording', 'warning');
-                    return;
-                }
-                
-                this.isRecording = true;
-                this.recordedChunks = [];
-                
-                // Start recording
-                if (this.camera.mediaRecorder) {
-                    this.camera.mediaRecorder.start(1000); // Collect data every second
-                }
-                
-                // Update UI
-                document.getElementById('recordBtn').classList.add('disabled');
-                document.getElementById('stopBtn').classList.remove('disabled');
-                
-                this.showNotification('Recording Started', 
-                    'Recording started', 
-                    'success');
-                this.addLog('Recording started', 'info');
-                this.updateRecordingStatus('recording');
-                
-                // Update storage usage
-                this.stats.storageUsed += 0.1;
-                this.updateStats();
-            }
-            
-            stopRecording() {
-                if (!this.isRecording) {
-                    return;
-                }
-                
-                this.isRecording = false;
-                
-                // Stop recording
-                if (this.camera.mediaRecorder) {
-                    this.camera.mediaRecorder.stop();
-                }
-                
-                // Update UI
-                document.getElementById('recordBtn').classList.remove('disabled');
-                document.getElementById('stopBtn').classList.add('disabled');
-                
-                this.showNotification('Recording Stopped', 
-                    'Recording saved to gallery', 
-                    'info');
-                this.updateRecordingStatus('stopped');
-            }
-            
-            saveRecording() {
-                if (this.recordedChunks.length === 0) {
-                    this.showNotification('Recording Error', 'No recording data found', 'error');
-                    return;
-                }
-                
-                const blob = new Blob(this.recordedChunks, {
-                    type: 'video/webm'
-                });
-                
-                const sizeMB = Math.round(blob.size / 1024 / 1024 * 100) / 100;
-                const timestamp = new Date().toLocaleString();
-                const videoUrl = URL.createObjectURL(blob);
-                
-                // Create a preview of the video for the gallery
-                const video = document.createElement('video');
-                video.src = videoUrl;
-                video.preload = 'metadata';
-                
-                video.onloadedmetadata = () => {
-                    // Add to gallery
-                    const mediaItem = {
-                        type: 'video',
-                        url: videoUrl,
-                        camera: 1,
-                        timestamp: timestamp,
-                        size: sizeMB,
-                        blob: blob,
-                        duration: Math.round(video.duration)
-                    };
-                    
-                    this.mediaGallery.push(mediaItem);
-                    this.stats.mediaCount++;
-                    this.stats.storageUsed += sizeMB;
-                    this.updateStats();
-                    this.updateGallery();
-                    this.saveToLocalStorage();
-                    
-                    this.addLog(`Recording saved (${sizeMB} MB, ${mediaItem.duration}s)`, 'info');
+                this.arduinoWS.onopen = () => {
+                    console.log('✅ Connected to Arduino server');
+                    this.arduinoConnected = true;
+                    this.updateArduinoStatus(true);
+                    this.showNotification('Arduino Connected', 'Connected to fire detection sensors', 'success');
+                    this.addLog('Arduino WebSocket connection established', 'info');
                 };
-            }
-            
-            captureSnapshot() {
-                if (!this.camera.isActive) {
-                    this.showNotification('Snapshot Error', 'Camera is not connected', 'error');
-                    return;
-                }
                 
-                const videoElement = document.getElementById('cameraFeed1');
-                
-                if (!videoElement) {
-                    this.showNotification('Snapshot Error', 'Video element not found', 'error');
-                    return;
-                }
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = videoElement.videoWidth || 640;
-                canvas.height = videoElement.videoHeight || 480;
-                
-                try {
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    
-                    const timestamp = new Date().toLocaleString();
-                    const imageUrl = canvas.toDataURL('image/jpeg', 0.8); // Use JPEG for smaller size
-                    
-                    // Add to gallery
-                    const mediaItem = {
-                        type: 'image',
-                        url: imageUrl,
-                        camera: 1,
-                        timestamp: timestamp,
-                        size: 0.05, // Estimated size in MB
-                        blob: null
-                    };
-                    
-                    this.mediaGallery.push(mediaItem);
-                    this.stats.mediaCount++;
-                    this.stats.storageUsed += 0.05;
-                    this.updateStats();
-                    this.updateGallery();
-                    this.saveToLocalStorage();
-                    
-                    this.showNotification('Snapshot Saved', 
-                        'Snapshot saved to gallery', 
-                        'success');
-                    this.addLog('Snapshot captured', 'info');
-                    
-                    // Visual feedback
-                    this.flashCameraFeedback();
-                    
-                } catch (error) {
-                    this.showNotification('Snapshot Error', 'Failed to capture image', 'error');
-                    console.error('Snapshot error:', error);
-                }
-            }
-            
-            flashCameraFeedback() {
-                const flash = document.createElement('div');
-                flash.style.position = 'absolute';
-                flash.style.top = '0';
-                flash.style.left = '0';
-                flash.style.width = '100%';
-                flash.style.height = '100%';
-                flash.style.background = 'rgba(255, 255, 255, 0.8)';
-                flash.style.pointerEvents = 'none';
-                flash.style.zIndex = '100';
-                flash.style.animation = 'fadeOut 0.3s ease forwards';
-                
-                const cameraView = document.getElementById('singleCameraView');
-                cameraView.appendChild(flash);
-                
-                setTimeout(() => {
-                    if (flash.parentNode) {
-                        flash.remove();
-                    }
-                }, 300);
-            }
-            
-            toggleFullscreen() {
-                const element = document.getElementById('singleCameraView');
-                
-                if (!document.fullscreenElement) {
-                    if (element.requestFullscreen) {
-                        element.requestFullscreen();
-                    } else if (element.webkitRequestFullscreen) {
-                        element.webkitRequestFullscreen();
-                    } else if (element.mozRequestFullScreen) {
-                        element.mozRequestFullScreen();
-                    } else if (element.msRequestFullscreen) {
-                        element.msRequestFullscreen();
-                    }
-                } else {
-                    this.exitFullscreen();
-                }
-            }
-            
-            exitFullscreen() {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-            
-            handleFullscreenChange() {
-                const isFullscreen = document.fullscreenElement || 
-                                   document.webkitFullscreenElement || 
-                                   document.mozFullScreenElement || 
-                                   document.msFullscreenElement;
-                
-                if (isFullscreen) {
-                    // Add fullscreen styles if needed
-                    document.getElementById('singleCameraView').style.height = 'calc(100vh - 40px)';
-                } else {
-                    // Reset styles when exiting fullscreen
-                    document.getElementById('singleCameraView').style.height = '';
-                }
-            }
-            
-            updatePressure(value) {
-                document.getElementById('pressureValue').textContent = value + '%';
-                const waterStatus = document.getElementById('waterStatus').querySelector('.status-subtext');
-                waterStatus.textContent = `Pressure: ${value}%`;
-                this.addLog(`Water pressure set to ${value}%`, 'water');
-            }
-            
-            activateWater() {
-                const pressure = document.getElementById('pressureSlider').value;
-                
-                this.waterActive = true;
-                document.getElementById('activateWaterBtn').classList.add('disabled');
-                document.getElementById('deactivateWaterBtn').classList.remove('disabled');
-                
-                this.showWaterSprayEffect();
-                this.showNotification('Water System Activated', 
-                    `Water system activated at ${pressure}% pressure`, 
-                    'success');
-                
-                this.addLog(`Water system activated at ${pressure}% pressure`, 'water');
-                this.updateWaterStatus('active');
-                
-                this.stats.waterActivations++;
-                this.updateStats();
-                
-                // Auto deactivate after 10 seconds for demo
-                setTimeout(() => {
-                    if (this.waterActive) {
-                        this.deactivateWater();
-                    }
-                }, 10000);
-            }
-            
-            deactivateWater() {
-                this.waterActive = false;
-                document.getElementById('activateWaterBtn').classList.remove('disabled');
-                document.getElementById('deactivateWaterBtn').classList.add('disabled');
-                
-                this.showNotification('Water System Stopped', 
-                    'Water system deactivated', 
-                    'info');
-                
-                this.addLog('Water system deactivated', 'water');
-                this.updateWaterStatus('ready');
-            }
-            
-            testSprinkler() {
-                this.showNotification('Sprinkler Test', 
-                    'Testing sprinkler system...', 
-                    'info');
-                this.addLog('Sprinkler system test initiated', 'water');
-                
-                this.showWaterSprayEffect();
-                
-                setTimeout(() => {
-                    this.showNotification('Sprinkler Test Complete', 
-                        'Sprinkler system tested successfully', 
-                        'success');
-                    this.addLog('Sprinkler system test completed successfully', 'water');
-                }, 2000);
-            }
-            
-            emergencyStop() {
-                if (confirm('⚠️ EMERGENCY STOP\n\nAre you sure you want to perform an emergency stop?\nThis will immediately shut down the entire water system.')) {
-                    this.waterActive = false;
-                    document.getElementById('activateWaterBtn').classList.remove('disabled');
-                    document.getElementById('deactivateWaterBtn').classList.add('disabled');
-                    
-                    // Stop fire alarm if active
-                    if (this.fireAlarmActive) {
-                        this.stopFireAlarm();
-                    }
-                    
-                    this.showNotification('EMERGENCY STOP', 
-                        'All systems emergency stopped', 
-                        'error');
-                    
-                    this.addLog('EMERGENCY STOP activated - All systems halted', 'alert');
-                    this.updateWaterStatus('emergency');
-                    
-                    // Reset after 5 seconds
-                    setTimeout(() => {
-                        this.updateWaterStatus('ready');
-                    }, 5000);
-                }
-            }
-            
-            startFireAlarm() {
-                if (!this.fireAlarmAudioContext || this.fireAlarmActive) return;
-                
-                // Check if sound alerts are enabled
-                if (!document.getElementById('soundAlerts').checked) {
-                    return;
-                }
-                
-                try {
-                    // Resume audio context if suspended (required for mobile browsers)
-                    if (this.fireAlarmAudioContext.state === 'suspended') {
-                        this.fireAlarmAudioContext.resume();
-                    }
-                    
-                    // Create oscillator for siren effect
-                    this.fireAlarmOscillator = this.fireAlarmAudioContext.createOscillator();
-                    this.fireAlarmGainNode = this.fireAlarmAudioContext.createGain();
-                    
-                    // Connect nodes
-                    this.fireAlarmOscillator.connect(this.fireAlarmGainNode);
-                    this.fireAlarmGainNode.connect(this.fireAlarmAudioContext.destination);
-                    
-                    // Set oscillator type and frequency
-                    this.fireAlarmOscillator.type = 'sawtooth';
-                    
-                    // Create siren effect by modulating frequency
-                    const now = this.fireAlarmAudioContext.currentTime;
-                    
-                    // Set base frequency (lower on mobile for better performance)
-                    const baseFreq = this.isMobile ? 600 : 800;
-                    this.fireAlarmOscillator.frequency.setValueAtTime(baseFreq, now);
-                    
-                    // Create siren effect: alternate between high and low frequencies
-                    const sirenInterval = 0.5; // seconds
-                    const highFreq = this.isMobile ? 1000 : 1200;
-                    const lowFreq = this.isMobile ? 400 : 600;
-                    
-                    // Schedule frequency changes for siren effect
-                    for (let i = 0; i < 20; i++) { // Schedule for 10 seconds
-                        const time = now + (i * sirenInterval);
-                        const freq = i % 2 === 0 ? highFreq : lowFreq;
-                        this.fireAlarmOscillator.frequency.exponentialRampToValueAtTime(freq, time);
-                    }
-                    
-                    // Set volume (lower on mobile)
-                    const volume = this.isMobile ? 0.5 : 0.7;
-                    this.fireAlarmGainNode.gain.setValueAtTime(volume, now);
-                    
-                    // Start the oscillator
-                    this.fireAlarmOscillator.start();
-                    
-                    this.fireAlarmActive = true;
-                    
-                    // Keep siren going by rescheduling
-                    this.fireAlarmInterval = setInterval(() => {
-                        if (this.fireAlarmActive && this.fireAlarmOscillator) {
-                            const now = this.fireAlarmAudioContext.currentTime;
-                            const currentFreq = this.fireAlarmOscillator.frequency.value;
-                            const nextFreq = currentFreq === highFreq ? lowFreq : highFreq;
-                            
-                            this.fireAlarmOscillator.frequency.exponentialRampToValueAtTime(
-                                nextFreq, 
-                                now + sirenInterval
-                            );
-                        }
-                    }, sirenInterval * 1000);
-                    
-                } catch (error) {
-                    console.error('Failed to start fire alarm:', error);
-                    this.showNotification('Audio Error', 'Could not play alarm sound', 'warning');
-                }
-            }
-            
-            stopFireAlarm() {
-                if (this.fireAlarmActive) {
+                this.arduinoWS.onmessage = (event) => {
                     try {
-                        // Clear the interval
-                        if (this.fireAlarmInterval) {
-                            clearInterval(this.fireAlarmInterval);
-                            this.fireAlarmInterval = null;
-                        }
-                        
-                        // Fade out the alarm sound
-                        if (this.fireAlarmOscillator && this.fireAlarmGainNode) {
-                            const now = this.fireAlarmAudioContext.currentTime;
-                            this.fireAlarmGainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-                            
-                            // Stop oscillator after fade out
-                            setTimeout(() => {
-                                if (this.fireAlarmOscillator) {
-                                    this.fireAlarmOscillator.stop();
-                                    this.fireAlarmOscillator.disconnect();
-                                    this.fireAlarmOscillator = null;
-                                    this.fireAlarmGainNode = null;
-                                }
-                            }, 500);
-                        }
-                        
-                        this.fireAlarmActive = false;
-                        
+                        const data = JSON.parse(event.data);
+                        this.handleArduinoData(data);
                     } catch (error) {
-                        console.error('Error stopping fire alarm:', error);
+                        console.error('Error parsing Arduino data:', error);
                     }
-                }
-            }
-            
-            handleFireDetection() {
-                // Don't trigger multiple fire alerts within 30 seconds
-                const now = Date.now();
-                if (this.lastFireDetection && (now - this.lastFireDetection) < 30000) {
-                    return;
-                }
-                this.lastFireDetection = now;
-                
-                // Update fire time in modal
-                const fireTime = new Date();
-                document.getElementById('fireTimeDetected').textContent = 
-                    fireTime.toLocaleTimeString('en-US', { 
-                        hour12: false,
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
-                
-                // Update fire status
-                const fireStatus = document.getElementById('fireStatus');
-                fireStatus.classList.add('alert');
-                fireStatus.querySelector('.status-text').textContent = 'FIRE DETECTED!';
-                fireStatus.querySelector('.status-subtext').textContent = 'Camera 1';
-                
-                // Update modal message
-                document.getElementById('fireAlertMessage').textContent = 
-                    'EMERGENCY! Fire has been detected. Water suppression system is activating automatically.';
-                
-                // Show fire alert modal
-                document.getElementById('fireAlertModal').style.display = 'flex';
-                this.fireAlertShown = true;
-                
-                this.addLog('🔥 FIRE DETECTED in Camera 1', 'alert');
-                
-                this.stats.fires++;
-                this.updateStats();
-                
-                // Start fire alarm if sound alerts are enabled
-                if (document.getElementById('soundAlerts').checked) {
-                    this.startFireAlarm();
-                }
-                
-                // Auto-activate water if enabled
-                if (document.getElementById('autoWaterToggle').checked) {
-                    setTimeout(() => this.activateWater(), 1000);
-                }
-                
-                // Visual alert
-                this.flashScreenAlert();
-                
-                // Make sure acknowledge button is focused for accessibility
-                setTimeout(() => {
-                    const acknowledgeBtn = document.getElementById('acknowledgeAlertBtn');
-                    if (acknowledgeBtn) {
-                        acknowledgeBtn.focus();
-                    }
-                }, 500);
-                
-                // Auto close alert after 60 seconds (but alarm continues)
-                this.autoCloseTimeout = setTimeout(() => {
-                    if (this.fireAlertShown) {
-                        this.closeFireAlert();
-                    }
-                }, 60000);
-                
-                // Vibrate on mobile if supported
-                if (this.isMobile && navigator.vibrate) {
-                    navigator.vibrate([200, 100, 200, 100, 200]);
-                }
-            }
-            
-            closeFireAlert() {
-                // Stop fire alarm
-                this.stopFireAlarm();
-                
-                // Clear auto-close timeout
-                if (this.autoCloseTimeout) {
-                    clearTimeout(this.autoCloseTimeout);
-                    this.autoCloseTimeout = null;
-                }
-                
-                // Hide modal with animation
-                const modal = document.getElementById('fireAlertModal');
-                modal.style.animation = 'modalFadeIn 0.3s ease reverse';
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    modal.style.animation = 'modalFadeIn 0.3s ease';
-                }, 300);
-                
-                // Reset fire status
-                const fireStatus = document.getElementById('fireStatus');
-                fireStatus.classList.remove('alert');
-                fireStatus.querySelector('.status-text').textContent = 'NO FIRE DETECTED';
-                fireStatus.querySelector('.status-subtext').textContent = 'System Normal';
-                
-                this.fireAlertShown = false;
-                
-                this.showNotification('Alert Acknowledged', 
-                    'Fire alarm stopped and alert acknowledged', 
-                    'info');
-                    
-                // Stop vibration if active
-                if (this.isMobile && navigator.vibrate) {
-                    navigator.vibrate(0);
-                }
-            }
-            
-            updateCameraStatus() {
-                const cameraCard = document.getElementById('cameraStatus');
-                const text = cameraCard.querySelector('.status-text');
-                const subtext = cameraCard.querySelector('.status-subtext');
-                const icon = cameraCard.querySelector('.status-icon');
-                
-                if (this.camera.isActive) {
-                    text.textContent = 'CAMERA ONLINE';
-                    subtext.textContent = 'Single Camera Connected';
-                    icon.style.color = 'var(--neon-green)';
-                    icon.classList.remove('fa-video-slash');
-                    icon.classList.add('fa-video');
-                } else {
-                    text.textContent = 'CAMERA OFFLINE';
-                    subtext.textContent = 'Single Camera System';
-                    icon.style.color = 'var(--primary-orange)';
-                    icon.classList.remove('fa-video');
-                    icon.classList.add('fa-video-slash');
-                }
-            }
-            
-            updateWaterStatus(status) {
-                const waterCard = document.getElementById('waterStatus');
-                const text = waterCard.querySelector('.status-text');
-                const subtext = waterCard.querySelector('.status-subtext');
-                const icon = waterCard.querySelector('.status-icon');
-                
-                if (status === 'active') {
-                    text.textContent = 'WATER ACTIVE';
-                    subtext.textContent = 'Spraying...';
-                    icon.style.color = 'var(--electric-blue)';
-                } else if (status === 'emergency') {
-                    text.textContent = 'EMERGENCY STOP';
-                    subtext.textContent = 'System halted';
-                    icon.style.color = 'var(--primary-red)';
-                } else {
-                    text.textContent = 'WATER READY';
-                    subtext.textContent = 'Pressure: ' + document.getElementById('pressureSlider').value + '%';
-                    icon.style.color = 'var(--primary-orange)';
-                }
-            }
-            
-            updateRecordingStatus(status) {
-                const recordingCard = document.getElementById('recordingStatus');
-                const text = recordingCard.querySelector('.status-text');
-                const subtext = recordingCard.querySelector('.status-subtext');
-                const icon = recordingCard.querySelector('.status-icon');
-                
-                if (status === 'recording') {
-                    text.textContent = 'RECORDING';
-                    subtext.textContent = 'Saving footage...';
-                    icon.style.color = 'var(--primary-red)';
-                    icon.classList.add('fa-circle');
-                    icon.classList.remove('fa-record-vinyl');
-                } else {
-                    text.textContent = 'NOT RECORDING';
-                    subtext.textContent = 'Idle';
-                    icon.style.color = 'var(--primary-orange)';
-                    icon.classList.remove('fa-circle');
-                    icon.classList.add('fa-record-vinyl');
-                }
-            }
-            
-            updateStats() {
-                document.getElementById('statCameras').textContent = `${this.stats.activeCameras}/1`;
-                document.getElementById('statFires').textContent = this.stats.fires;
-                document.getElementById('statWater').textContent = this.stats.waterActivations;
-                document.getElementById('statMedia').textContent = this.stats.mediaCount;
-                document.getElementById('statStorage').textContent = this.stats.storageUsed.toFixed(1) + ' MB';
-                
-                const uptime = Math.floor((new Date() - this.stats.startTime) / 1000);
-                const hours = Math.floor(uptime / 3600);
-                const minutes = Math.floor((uptime % 3600) / 60);
-                const seconds = uptime % 60;
-                
-                document.getElementById('statUptime').textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            updateGallery() {
-                const galleryGrid = document.getElementById('galleryGrid');
-                const emptyGallery = document.getElementById('emptyGallery');
-                
-                if (this.mediaGallery.length === 0) {
-                    galleryGrid.innerHTML = '';
-                    emptyGallery.style.display = 'block';
-                    return;
-                }
-                
-                emptyGallery.style.display = 'none';
-                galleryGrid.innerHTML = '';
-                
-                // Show latest 12 items
-                const itemsToShow = this.mediaGallery.slice(-12).reverse();
-                
-                itemsToShow.forEach((item, index) => {
-                    const galleryItem = document.createElement('div');
-                    galleryItem.className = 'gallery-item';
-                    galleryItem.dataset.index = this.mediaGallery.length - 1 - index;
-                    
-                    if (item.type === 'image') {
-                        galleryItem.innerHTML = `
-                            <img src="${item.url}" alt="Snapshot from Camera" loading="lazy">
-                            <div class="gallery-item-info" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); padding: 4px; font-size: 0.7rem;">
-                                <div>${item.timestamp}</div>
-                            </div>
-                        `;
-                    } else if (item.type === 'video') {
-                        galleryItem.innerHTML = `
-                            <video muted playsinline>
-                                <source src="${item.url}" type="video/webm">
-                            </video>
-                            <div class="gallery-item-info" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); padding: 4px; font-size: 0.7rem;">
-                                <div>${item.timestamp}</div>
-                            </div>
-                        `;
-                    }
-                    
-                    galleryGrid.appendChild(galleryItem);
-                    
-                    // Add click handler to view media
-                    galleryItem.addEventListener('click', () => {
-                        this.viewMedia(item);
-                    });
-                });
-            }
-            
-            viewMedia(mediaItem) {
-                if (mediaItem.type === 'image') {
-                    // Open image in new tab
-                    window.open(mediaItem.url, '_blank');
-                } else if (mediaItem.type === 'video') {
-                    // Create modal for video playback
-                    const modal = document.createElement('div');
-                    modal.style.position = 'fixed';
-                    modal.style.top = '0';
-                    modal.style.left = '0';
-                    modal.style.width = '100%';
-                    modal.style.height = '100%';
-                    modal.style.background = 'rgba(0,0,0,0.9)';
-                    modal.style.zIndex = '10000';
-                    modal.style.display = 'flex';
-                    modal.style.alignItems = 'center';
-                    modal.style.justifyContent = 'center';
-                    modal.style.padding = '20px';
-                    
-                    modal.innerHTML = `
-                        <div style="position: relative; max-width: 800px; width: 100%;">
-                            <video controls autoplay style="width: 100%; border-radius: 10px;">
-                                <source src="${mediaItem.url}" type="video/webm">
-                            </video>
-                            <button style="position: absolute; top: 10px; right: 10px; background: rgba(255,107,53,0.9); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;">×</button>
-                        </div>
-                    `;
-                    
-                    document.body.appendChild(modal);
-                    
-                    // Add close functionality
-                    modal.querySelector('button').addEventListener('click', () => {
-                        modal.remove();
-                    });
-                    
-                    // Close on background click
-                    modal.addEventListener('click', (e) => {
-                        if (e.target === modal) {
-                            modal.remove();
-                        }
-                    });
-                }
-            }
-            
-            downloadMedia(index) {
-                const mediaItem = this.mediaGallery[index];
-                if (!mediaItem) return;
-                
-                let blob;
-                let filename;
-                
-                if (mediaItem.type === 'image') {
-                    // Convert base64 to blob
-                    const byteString = atob(mediaItem.url.split(',')[1]);
-                    const mimeString = mediaItem.url.split(',')[0].split(':')[1].split(';')[0];
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
-                    blob = new Blob([ab], { type: mimeString });
-                    filename = `apula-snapshot-${Date.now()}.jpg`;
-                } else if (mediaItem.type === 'video') {
-                    blob = mediaItem.blob;
-                    filename = `apula-recording-${Date.now()}.webm`;
-                }
-                
-                if (!blob) {
-                    this.showNotification('Download Error', 'Media file not available', 'error');
-                    return;
-                }
-                
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-                
-                this.showNotification('Download Started', 
-                    `Downloading ${mediaItem.type}`, 
-                    'info');
-                this.addLog(`Downloaded ${mediaItem.type}`, 'info');
-            }
-            
-            deleteMedia(index) {
-                if (confirm('Delete this media file?')) {
-                    const mediaItem = this.mediaGallery[index];
-                    
-                    // Update stats
-                    this.stats.mediaCount--;
-                    this.stats.storageUsed -= mediaItem.size || 0;
-                    
-                    // Remove from gallery
-                    this.mediaGallery.splice(index, 1);
-                    this.updateGallery();
-                    this.updateStats();
-                    this.saveToLocalStorage();
-                    
-                    this.showNotification('Media Deleted', 
-                        'Media file removed from gallery', 
-                        'info');
-                    this.addLog('Media file deleted from gallery', 'info');
-                }
-            }
-            
-            clearGallery() {
-                if (this.mediaGallery.length === 0) {
-                    this.showNotification('Gallery Empty', 'No media to clear', 'info');
-                    return;
-                }
-                
-                if (confirm('Clear all media from gallery? This cannot be undone.')) {
-                    this.mediaGallery = [];
-                    this.stats.mediaCount = 0;
-                    this.stats.storageUsed = 0;
-                    this.updateGallery();
-                    this.updateStats();
-                    this.saveToLocalStorage();
-                    
-                    this.showNotification('Gallery Cleared', 
-                        'All media files removed', 
-                        'info');
-                    this.addLog('Gallery cleared - all media files removed', 'info');
-                }
-            }
-            
-            playPauseVideo(button) {
-                const video = button.closest('.gallery-item').querySelector('video');
-                const icon = button.querySelector('i');
-                
-                if (video.paused) {
-                    video.play();
-                    icon.className = 'fas fa-pause';
-                } else {
-                    video.pause();
-                    icon.className = 'fas fa-play';
-                }
-            }
-            
-            addLog(message, type = '') {
-                const logContainer = document.getElementById('logContainer');
-                const logEntry = document.createElement('div');
-                logEntry.className = `log-entry ${type}`;
-                
-                const time = new Date();
-                const timeStr = time.toLocaleTimeString('en-US', { 
-                    hour12: false,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
-                
-                logEntry.innerHTML = `
-                    <span class="log-time">${timeStr}</span>
-                    <span class="log-message">${message}</span>
-                `;
-                
-                logContainer.appendChild(logEntry);
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                // Keep only last 50 entries
-                while (logContainer.children.length > 50) {
-                    logContainer.removeChild(logContainer.firstChild);
-                }
-            }
-            
-            clearLogs() {
-                if (confirm('Clear all system logs?')) {
-                    const logContainer = document.getElementById('logContainer');
-                    logContainer.innerHTML = '';
-                    this.addLog('Logs cleared', 'info');
-                }
-            }
-            
-            showNotification(title, message, type = 'info') {
-                const notificationCenter = document.getElementById('notificationCenter');
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                
-                notification.innerHTML = `
-                    <div class="notification-header">
-                        <span class="notification-title">${title}</span>
-                        <button class="notification-close" onclick="this.parentElement.parentElement.remove()" aria-label="Close notification">
-                            &times;
-                        </button>
-                    </div>
-                    <div class="notification-message">${message}</div>
-                `;
-                
-                notificationCenter.appendChild(notification);
-                
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.style.opacity = '0';
-                        notification.style.transform = 'translateX(100%)';
-                        setTimeout(() => notification.remove(), 300);
-                    }
-                }, 5000);
-            }
-            
-            showLoading(show) {
-                const overlay = document.getElementById('loadingOverlay');
-                overlay.style.display = show ? 'flex' : 'none';
-            }
-            
-            showWaterSprayEffect() {
-                const sprayEffect = document.getElementById('waterSprayEffect');
-                sprayEffect.style.display = 'block';
-                
-                // Create water droplets (fewer on mobile for performance)
-                const dropletCount = this.isMobile ? 30 : 50;
-                
-                for (let i = 0; i < dropletCount; i++) {
-                    const droplet = document.createElement('div');
-                    droplet.className = 'water-droplet';
-                    
-                    const size = Math.random() * 12 + 3;
-                    droplet.style.width = `${size}px`;
-                    droplet.style.height = `${size}px`;
-                    droplet.style.left = `${Math.random() * 100}%`;
-                    droplet.style.animationDuration = `${Math.random() * 1 + 1}s`;
-                    droplet.style.animationDelay = `${Math.random() * 0.5}s`;
-                    droplet.style.opacity = '0.6';
-                    
-                    sprayEffect.appendChild(droplet);
-                    
-                    // Remove droplet after animation
-                    setTimeout(() => {
-                        if (droplet.parentNode) {
-                            droplet.remove();
-                        }
-                    }, 3000);
-                }
-                
-                setTimeout(() => {
-                    sprayEffect.style.display = 'none';
-                    sprayEffect.innerHTML = '';
-                }, 2000);
-            }
-            
-            flashScreenAlert() {
-                const flash = document.createElement('div');
-                flash.style.position = 'fixed';
-                flash.style.top = '0';
-                flash.style.left = '0';
-                flash.style.width = '100%';
-                flash.style.height = '100%';
-                flash.style.background = 'rgba(255, 68, 68, 0.3)';
-                flash.style.pointerEvents = 'none';
-                flash.style.zIndex = '9998';
-                flash.style.animation = 'fadeOut 0.5s ease forwards';
-                
-                document.body.appendChild(flash);
-                
-                setTimeout(() => {
-                    if (flash.parentNode) {
-                        flash.remove();
-                    }
-                }, 500);
-            }
-            
-            addTestFireButton() {
-                // Add test fire button
-                const testBtn = document.createElement('button');
-                testBtn.innerHTML = `🔥 Test Fire Detection`;
-                testBtn.style.position = 'fixed';
-                testBtn.style.bottom = '20px';
-                testBtn.style.right = '20px';
-                testBtn.style.padding = '10px 16px';
-                testBtn.style.background = 'linear-gradient(135deg, var(--primary-red), var(--dark-red))';
-                testBtn.style.color = 'white';
-                testBtn.style.border = 'none';
-                testBtn.style.borderRadius = '8px';
-                testBtn.style.cursor = 'pointer';
-                testBtn.style.zIndex = '1000';
-                testBtn.style.boxShadow = '0 4px 15px rgba(255, 68, 68, 0.5)';
-                testBtn.style.fontSize = '0.85rem';
-                testBtn.style.fontWeight = '600';
-                testBtn.onclick = () => {
-                    this.handleFireDetection();
                 };
-                document.body.appendChild(testBtn);
                 
-                // Move button on mobile to avoid overlap with other elements
-                if (this.isMobile) {
-                    testBtn.style.bottom = '80px';
-                    testBtn.style.right = '10px';
-                    testBtn.style.fontSize = '0.8rem';
-                    testBtn.style.padding = '8px 12px';
+                this.arduinoWS.onerror = (error) => {
+                    console.error('Arduino WebSocket error:', error);
+                    this.addLog('Arduino connection error', 'alert');
+                };
+                
+                this.arduinoWS.onclose = () => {
+                    console.log('Arduino WebSocket disconnected');
+                    this.arduinoConnected = false;
+                    this.updateArduinoStatus(false);
+                    
+                    // Try to reconnect after 3 seconds
+                    setTimeout(() => this.initArduinoConnection(), 3000);
+                };
+            }
+            
+            handleArduinoData(data) {
+                switch(data.type) {
+                    case 'connection':
+                        console.log('Arduino server:', data.message);
+                        break;
+                        
+                    case 'sensor_data':
+                        this.sensorValues = data.sensorValues || [800, 800, 800];
+                        this.updateSensorDisplay();
+                        break;
+                        
+                    case 'fire_alert':
+                        // Arduino detected fire!
+                        this.sensorValues = data.sensorValues || [150, 800, 800];
+                        this.updateSensorDisplay();
+                        
+                        // Update fire location in modal
+                        const locationElement = document.querySelector('.fire-alert-info p:nth-child(1)');
+                        if (locationElement) {
+                            locationElement.innerHTML = 
+                                `<i class="fas fa-exclamation-triangle"></i> 
+                                <strong>Location:</strong> ${data.location}`;
+                        }
+                        
+                        // Update fire size estimate
+                        const minValue = Math.min(...this.sensorValues.filter(v => v > 0));
+                        let fireSize = 'MEDIUM';
+                        if (minValue < 100) {
+                            fireSize = 'LARGE';
+                        } else if (minValue > 400) {
+                            fireSize = 'SMALL';
+                        }
+                        const fireSizeElement = document.getElementById('fireSizeEstimate');
+                        if (fireSizeElement) {
+                            fireSizeElement.textContent = fireSize;
+                        }
+                        
+                        // Show Arduino alert in camera feed
+                        this.showArduinoFireAlert(data.location);
+                        
+                        // Trigger the fire alert
+                        this.handleFireDetection();
+                        
+                        // Add log entry
+                        this.addLog(`🔥 ARDUINO: ${data.message}`, 'alert');
+                        break;
+                        
+                    case 'command_response':
+                        this.showNotification('Arduino Command', data.message, 'info');
+                        break;
                 }
             }
+            
+            updateArduinoStatus(connected) {
+                const dot = document.getElementById('connectionDot');
+                const statusText = document.getElementById('arduinoStatusText');
+                const card = document.getElementById('arduinoStatusCard');
+                const cardText = document.getElementById('arduinoCardText');
+                const cardSubtext = document.getElementById('arduinoCardSubtext');
+                const controls = document.getElementById('arduinoControls');
+                const sensorDisplay = document.getElementById('sensorDisplay');
+                
+                if (connected) {
+                    // Update status indicators
+                    dot.className = 'connection-dot connected';
+                    statusText.textContent = 'Connected';
+                    
+                    // Update card
+                    card.className = 'status-card arduino-success';
+                    cardText.textContent = 'ARDUINO CONNECTED';
+                    cardSubtext.textContent = '3 Sensors Active';
+                    
+                    // Show controls and sensors
+                    controls.style.display = 'grid';
+                    sensorDisplay.style.display = 'grid';
+                    
+                } else {
+                    // Update status indicators
+                    dot.className = 'connection-dot disconnected';
+                    statusText.textContent = 'Disconnected';
+                    
+                    // Update card
+                    card.className = 'status-card arduino-disconnected';
+                    cardText.textContent = 'ARDUINO OFFLINE';
+                    cardSubtext.textContent = 'Click to Connect';
+                    
+                    // Hide controls and sensors
+                    controls.style.display = 'none';
+                    sensorDisplay.style.display = 'none';
+                }
+            }
+            
+            updateSensorDisplay() {
+                for (let i = 0; i < 3; i++) {
+                    const element = document.getElementById(`sensor${i + 1}Value`);
+                    if (element) {
+                        const value = this.sensorValues[i] || 800;
+                        element.textContent = value;
+                        
+                        // Color code based on value (lower = closer to fire)
+                        if (value < 200) {
+                            element.className = 'sensor-value fire';
+                        } else if (value < 400) {
+                            element.className = 'sensor-value warning';
+                        } else {
+                            element.className = 'sensor-value normal';
+                        }
+                    }
+                }
+            }
+            
+            showArduinoFireAlert(location) {
+                const alertElement = document.getElementById('arduinoFireAlert');
+                const locationElement = document.getElementById('arduinoAlertLocation');
+                
+                if (alertElement && locationElement) {
+                    locationElement.textContent = location;
+                    alertElement.style.display = 'block';
+                    
+                    // Auto-hide after 10 seconds
+                    setTimeout(() => {
+                        alertElement.style.display = 'none';
+                    }, 10000);
+                }
+            }
+            
+            sendArduinoCommand(command) {
+                if (this.arduinoWS && this.arduinoConnected) {
+                    this.arduinoWS.send(JSON.stringify({
+                        command: command,
+                        timestamp: new Date().toISOString()
+                    }));
+                } else {
+                    this.showNotification('Arduino Error', 'Arduino not connected', 'error');
+                }
+            }
+            
+            // === END OF ARDUINO INTEGRATION ===
+            
+            // Your original methods continue...
+            // loadFromLocalStorage, saveToLocalStorage, showNotification, addLog, etc.
+            // ... ALL your original methods ...
+            
         }
 
-        // Initialize the app
+        // Initialize the main app
         window.app = new APULAApp();
         
-        // Make functions globally available
+        // Make original functions globally available
         window.connectCamera = (type) => app.connectCamera(type);
         window.addCamera = () => app.addCamera();
         window.startRecording = () => app.startRecording();
@@ -3389,7 +635,31 @@
         window.closeFireAlert = () => app.closeFireAlert();
         window.clearLogs = () => app.clearLogs();
         window.clearGallery = () => app.clearGallery();
-
+        
+        // Arduino command functions
+        window.arduinoCommand = {
+            testConnection: () => {
+                app.sendArduinoCommand('test_connection');
+            },
+            
+            simulateFire: () => {
+                app.sendArduinoCommand('simulate_fire');
+                app.showNotification('Fire Simulation', 'Simulating fire detection...', 'warning');
+            },
+            
+            connect: () => {
+                app.initArduinoConnection();
+                app.showNotification('Arduino', 'Attempting to reconnect...', 'info');
+            }
+        };
+        
+        // Make Arduino status card clickable
+        document.getElementById('arduinoStatusCard').addEventListener('click', () => {
+            if (!app.arduinoConnected) {
+                arduinoCommand.connect();
+            }
+        });
+        
         // Add CSS animation for fadeOut
         if (!document.querySelector('#fadeOutAnimation')) {
             const style = document.createElement('style');
