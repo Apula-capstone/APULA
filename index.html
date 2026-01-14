@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APULA - Live Dashboard</title>
+    <title>APULA - Smart Fire Detection & Prevention System</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -877,16 +877,16 @@
             font-size: 1.1rem;
         }
 
-        /* Fire Alert Modal Enhancement */
+        /* IMPROVED Fire Alert Modal Enhancement */
         #fireAlertModal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 20000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -899,86 +899,199 @@
         }
 
         .fire-alert-content {
-            background: linear-gradient(135deg, #3A0A0A 0%, #5A0A0A 100%);
-            padding: 50px;
+            background: linear-gradient(135deg, #3A0A0A 0%, #5A0A0A 30%, #8B0000 100%);
+            padding: 60px 40px;
             border-radius: var(--border-radius);
             text-align: center;
-            max-width: 600px;
+            max-width: 800px;
             width: 90%;
-            border: 3px solid var(--primary-red);
+            border: 4px solid var(--primary-red);
             box-shadow: 
-                0 0 50px rgba(255, 68, 68, 0.8),
-                inset 0 0 30px rgba(255, 68, 68, 0.3);
-            animation: alertShake 0.5s ease;
-        }
-
-        @media (max-width: 768px) {
-            .fire-alert-content {
-                padding: 30px 20px;
-            }
-            
-            .fire-alert-content h2 {
-                font-size: 2.5rem !important;
-            }
+                0 0 100px rgba(255, 68, 68, 0.8),
+                inset 0 0 50px rgba(255, 68, 68, 0.4),
+                0 0 0 20px rgba(255, 68, 68, 0.2);
+            animation: alertShake 0.5s ease, alertGlow 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
 
         @keyframes alertShake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
         }
 
-        .fire-alert-content i {
-            font-size: 5rem;
+        @keyframes alertGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 100px rgba(255, 68, 68, 0.8),
+                    inset 0 0 50px rgba(255, 68, 68, 0.4),
+                    0 0 0 20px rgba(255, 68, 68, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 150px rgba(255, 68, 68, 1),
+                    inset 0 0 80px rgba(255, 68, 68, 0.6),
+                    0 0 0 30px rgba(255, 68, 68, 0.3);
+            }
+        }
+
+        .fire-alert-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at center, transparent 30%, rgba(255, 68, 68, 0.1) 70%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 68, 68, 0.1) 10px,
+                    rgba(255, 68, 68, 0.1) 20px
+                );
+            animation: pulseBackground 2s infinite;
+        }
+
+        @keyframes pulseBackground {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        @media (max-width: 768px) {
+            .fire-alert-content {
+                padding: 40px 20px;
+            }
+            
+            .fire-alert-content h2 {
+                font-size: 2.8rem !important;
+            }
+        }
+
+        .fire-alert-icon {
+            font-size: 7rem;
             color: var(--primary-red);
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             animation: fireAlertIcon 1s infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.8));
+            position: relative;
+            z-index: 2;
         }
 
         @keyframes fireAlertIcon {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255, 68, 68, 0.8)); }
-            50% { transform: scale(1.2); filter: drop-shadow(0 0 20px rgba(255, 68, 68, 1)); }
+            0%, 100% { 
+                transform: scale(1) rotate(0deg); 
+                filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.8));
+            }
+            25% { 
+                transform: scale(1.2) rotate(-5deg); 
+                filter: drop-shadow(0 0 30px rgba(255, 68, 68, 1));
+            }
+            75% { 
+                transform: scale(1.2) rotate(5deg); 
+                filter: drop-shadow(0 0 30px rgba(255, 68, 68, 1));
+            }
         }
 
         .fire-alert-content h2 {
             color: white;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.7),
+                0 0 20px rgba(255, 68, 68, 0.8),
+                0 0 30px rgba(255, 68, 68, 0.6);
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            animation: textPulse 1s infinite;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 10px rgba(255, 255, 255, 0.7),
+                    0 0 20px rgba(255, 68, 68, 0.8),
+                    0 0 30px rgba(255, 68, 68, 0.6);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 15px rgba(255, 255, 255, 0.9),
+                    0 0 30px rgba(255, 68, 68, 1),
+                    0 0 45px rgba(255, 68, 68, 0.8);
+            }
         }
 
         .fire-alert-content p {
             color: var(--light-orange);
-            margin-bottom: 35px;
-            font-size: 1.2rem;
+            margin-bottom: 40px;
+            font-size: 1.4rem;
             line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+
+        .fire-alert-info {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px solid rgba(255, 107, 53, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .fire-alert-info p {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .fire-alert-info i {
+            color: var(--yellow-warning);
+            margin-right: 10px;
         }
 
         .alert-acknowledge-btn {
             background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
             color: white;
             border: none;
-            padding: 18px 50px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.2rem;
+            padding: 25px 60px;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 1.5rem;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+            box-shadow: 
+                0 8px 30px rgba(255, 68, 68, 0.5),
+                0 0 0 5px rgba(255, 68, 68, 0.3);
+            position: relative;
+            z-index: 2;
+            margin-top: 20px;
         }
 
         @media (max-width: 480px) {
             .alert-acknowledge-btn {
-                padding: 15px 30px;
-                font-size: 1rem;
+                padding: 20px 40px;
+                font-size: 1.3rem;
             }
         }
 
         .alert-acknowledge-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 68, 68, 0.6);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 12px 40px rgba(255, 68, 68, 0.7),
+                0 0 0 8px rgba(255, 68, 68, 0.4);
+            background: linear-gradient(135deg, #FF0000, var(--primary-red));
+        }
+
+        .alert-acknowledge-btn:active {
+            transform: translateY(0) scale(0.98);
         }
 
         /* Live Indicators */
@@ -1176,6 +1289,11 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Hidden audio element for fire alarm */
+        #fireAlarmSound {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -1189,6 +1307,11 @@
 
     <!-- Water Spray Effect -->
     <div class="water-spray-effect" id="waterSprayEffect"></div>
+
+    <!-- Fire Alarm Sound (hidden) -->
+    <audio id="fireAlarmSound" preload="auto" loop>
+        <!-- We'll generate fire alarm sound with Web Audio API -->
+    </audio>
 
     <!-- Fullscreen Exit Button -->
     <button class="fullscreen-exit-btn" onclick="exitFullscreen()" title="Exit Fullscreen">
@@ -1532,18 +1655,32 @@
         </div>
     </div>
 
-    <!-- Enhanced Fire Alert Modal -->
+    <!-- IMPROVED Fire Alert Modal -->
     <div id="fireAlertModal">
         <div class="fire-alert-content">
-            <i class="fas fa-fire"></i>
-            <h2>🚨 FIRE DETECTED!</h2>
-            <p id="fireAlertMessage">Fire has been detected in Camera 1. Water suppression system is activating automatically.</p>
-            <p style="font-size: 1.1rem; color: white; margin-top: 15px;">
-                <i class="fas fa-exclamation-circle"></i> 
-                Estimated fire size: <span id="fireSizeEstimate">Medium</span>
+            <i class="fas fa-fire fire-alert-icon"></i>
+            <h2>🚨 FIRE DETECTED! 🚨</h2>
+            <p id="fireAlertMessage">EMERGENCY! Fire has been detected. Water suppression system is activating automatically.</p>
+            
+            <div class="fire-alert-info">
+                <p><i class="fas fa-exclamation-triangle"></i> 
+                <strong>Location:</strong> Camera 1 - Main Area</p>
+                <p><i class="fas fa-fire"></i> 
+                <strong>Fire Size:</strong> <span id="fireSizeEstimate" style="color: var(--yellow-warning); font-weight: bold;">MEDIUM</span></p>
+                <p><i class="fas fa-clock"></i> 
+                <strong>Time Detected:</strong> <span id="fireTimeDetected">Just now</span></p>
+                <p><i class="fas fa-tint"></i> 
+                <strong>Response:</strong> Water suppression system <span style="color: var(--electric-blue); font-weight: bold;">ACTIVATED</span></p>
+            </div>
+            
+            <p style="color: white; font-size: 1.2rem; margin-top: 20px;">
+                <i class="fas fa-volume-up"></i> 
+                <strong>Fire alarm is active</strong> - It will continue until acknowledged
             </p>
+            
             <button class="alert-acknowledge-btn" onclick="closeFireAlert()">
-                ACKNOWLEDGE ALERT
+                <i class="fas fa-bell-slash" style="margin-right: 10px;"></i>
+                ACKNOWLEDGE ALERT & STOP ALARM
             </button>
         </div>
     </div>
@@ -1566,6 +1703,12 @@
                     startTime: new Date()
                 };
                 
+                // Fire alarm variables
+                this.fireAlarmAudioContext = null;
+                this.fireAlarmOscillator = null;
+                this.fireAlarmGainNode = null;
+                this.fireAlarmActive = false;
+                
                 this.init();
             }
             
@@ -1583,6 +1726,19 @@
                 document.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('mozfullscreenchange', this.handleFullscreenChange.bind(this));
                 document.addEventListener('MSFullscreenChange', this.handleFullscreenChange.bind(this));
+                
+                // Initialize Web Audio API for fire alarm
+                this.initializeAudioContext();
+            }
+            
+            initializeAudioContext() {
+                try {
+                    this.fireAlarmAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.showNotification('Audio System', 'Fire alarm system ready', 'info');
+                } catch (error) {
+                    console.error('Audio Context not supported:', error);
+                    this.showNotification('Audio Error', 'Fire alarm sound may not work in this browser', 'warning');
+                }
             }
             
             loadFromLocalStorage() {
@@ -1665,6 +1821,15 @@
                 // Save to localStorage before page unload
                 window.addEventListener('beforeunload', () => {
                     this.saveToLocalStorage();
+                    this.stopFireAlarm(); // Stop alarm if active
+                });
+                
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && this.fireAlarmActive) {
+                        // Resume alarm if page becomes visible again
+                        this.startFireAlarm();
+                    }
                 });
             }
             
@@ -1934,15 +2099,19 @@
                         element.msRequestFullscreen();
                     }
                 } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
+                    this.exitFullscreen();
+                }
+            }
+            
+            exitFullscreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
                 }
             }
             
@@ -2043,6 +2212,91 @@
                 }
             }
             
+            startFireAlarm() {
+                if (!this.fireAlarmAudioContext || this.fireAlarmActive) return;
+                
+                try {
+                    // Create oscillator for siren effect
+                    this.fireAlarmOscillator = this.fireAlarmAudioContext.createOscillator();
+                    this.fireAlarmGainNode = this.fireAlarmAudioContext.createGain();
+                    
+                    // Connect nodes
+                    this.fireAlarmOscillator.connect(this.fireAlarmGainNode);
+                    this.fireAlarmGainNode.connect(this.fireAlarmAudioContext.destination);
+                    
+                    // Set oscillator type and frequency
+                    this.fireAlarmOscillator.type = 'sawtooth';
+                    
+                    // Create siren effect by modulating frequency
+                    const now = this.fireAlarmAudioContext.currentTime;
+                    
+                    // Set base frequency
+                    this.fireAlarmOscillator.frequency.setValueAtTime(800, now);
+                    
+                    // Create siren effect: alternate between high and low frequencies
+                    const sirenInterval = 0.5; // seconds
+                    const highFreq = 1200;
+                    const lowFreq = 600;
+                    
+                    // Schedule frequency changes for siren effect
+                    for (let i = 0; i < 20; i++) { // Schedule for 10 seconds
+                        const time = now + (i * sirenInterval);
+                        const freq = i % 2 === 0 ? highFreq : lowFreq;
+                        this.fireAlarmOscillator.frequency.exponentialRampToValueAtTime(freq, time);
+                    }
+                    
+                    // Set volume (0.7 = 70% volume - LOUD)
+                    this.fireAlarmGainNode.gain.setValueAtTime(0.7, now);
+                    
+                    // Start the oscillator
+                    this.fireAlarmOscillator.start();
+                    
+                    // Keep siren going by rescheduling
+                    setInterval(() => {
+                        if (this.fireAlarmActive && this.fireAlarmOscillator) {
+                            const now = this.fireAlarmAudioContext.currentTime;
+                            const currentFreq = this.fireAlarmOscillator.frequency.value;
+                            const nextFreq = currentFreq === highFreq ? lowFreq : highFreq;
+                            
+                            this.fireAlarmOscillator.frequency.exponentialRampToValueAtTime(
+                                nextFreq, 
+                                now + sirenInterval
+                            );
+                        }
+                    }, sirenInterval * 1000);
+                    
+                    this.fireAlarmActive = true;
+                    console.log('Fire alarm started');
+                    
+                } catch (error) {
+                    console.error('Failed to start fire alarm:', error);
+                }
+            }
+            
+            stopFireAlarm() {
+                if (this.fireAlarmActive && this.fireAlarmOscillator) {
+                    try {
+                        // Fade out the alarm sound
+                        const now = this.fireAlarmAudioContext.currentTime;
+                        this.fireAlarmGainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                        
+                        // Stop oscillator after fade out
+                        setTimeout(() => {
+                            if (this.fireAlarmOscillator) {
+                                this.fireAlarmOscillator.stop();
+                                this.fireAlarmOscillator.disconnect();
+                                this.fireAlarmOscillator = null;
+                                this.fireAlarmGainNode = null;
+                            }
+                            this.fireAlarmActive = false;
+                            console.log('Fire alarm stopped');
+                        }, 500);
+                    } catch (error) {
+                        console.error('Error stopping fire alarm:', error);
+                    }
+                }
+            }
+            
             handleFireDetection() {
                 // Don't trigger multiple fire alerts within 30 seconds
                 const now = Date.now();
@@ -2050,6 +2304,16 @@
                     return;
                 }
                 this.lastFireDetection = now;
+                
+                // Update fire time in modal
+                const fireTime = new Date();
+                document.getElementById('fireTimeDetected').textContent = 
+                    fireTime.toLocaleTimeString('en-US', { 
+                        hour12: false,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
                 
                 // Update fire status
                 const fireStatus = document.getElementById('fireStatus');
@@ -2059,41 +2323,51 @@
                 
                 // Update modal message
                 document.getElementById('fireAlertMessage').textContent = 
-                    'Fire has been detected. Water suppression system is activating automatically.';
+                    'EMERGENCY! Fire has been detected. Water suppression system is activating automatically.';
                 
                 // Show fire alert modal
                 document.getElementById('fireAlertModal').style.display = 'flex';
                 
-                this.addLog('🔥 FIRE DETECTED', 'alert');
+                this.addLog('🔥 FIRE DETECTED in Camera 1', 'alert');
                 
                 this.stats.fires++;
                 this.updateStats();
+                
+                // Start fire alarm if sound alerts are enabled
+                if (document.getElementById('soundAlerts').checked) {
+                    this.startFireAlarm();
+                }
                 
                 // Auto-activate water if enabled
                 if (document.getElementById('autoWaterToggle').checked) {
                     setTimeout(() => this.activateWater(), 1000);
                 }
                 
-                // Play alert sound if enabled
-                if (document.getElementById('soundAlerts').checked) {
-                    this.playAlertSound();
-                }
-                
                 // Visual alert
                 this.flashScreenAlert();
                 
-                // Auto close alert after 30 seconds
+                // Auto close alert after 60 seconds (but alarm continues)
                 setTimeout(() => {
                     this.closeFireAlert();
-                }, 30000);
+                }, 60000);
             }
             
             closeFireAlert() {
+                // Stop fire alarm
+                this.stopFireAlarm();
+                
+                // Hide modal
                 document.getElementById('fireAlertModal').style.display = 'none';
+                
+                // Reset fire status
                 const fireStatus = document.getElementById('fireStatus');
                 fireStatus.classList.remove('alert');
                 fireStatus.querySelector('.status-text').textContent = 'NO FIRE DETECTED';
                 fireStatus.querySelector('.status-subtext').textContent = 'System Normal';
+                
+                this.showNotification('Alert Acknowledged', 
+                    'Fire alarm stopped and alert acknowledged', 
+                    'info');
             }
             
             updateCameraStatus() {
@@ -2428,29 +2702,6 @@
                 }, 2000);
             }
             
-            playAlertSound() {
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.5);
-                    
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                    
-                    oscillator.start();
-                    oscillator.stop(audioContext.currentTime + 0.5);
-                    
-                } catch (error) {
-                    console.log('Audio context not supported:', error);
-                }
-            }
-            
             flashScreenAlert() {
                 const flash = document.createElement('div');
                 flash.style.position = 'fixed';
@@ -2501,7 +2752,7 @@
         window.stopRecording = () => app.stopRecording();
         window.captureSnapshot = () => app.captureSnapshot();
         window.toggleFullscreen = () => app.toggleFullscreen();
-        window.exitFullscreen = () => app.toggleFullscreen(); // Same function toggles
+        window.exitFullscreen = () => app.exitFullscreen();
         window.updatePressure = (value) => app.updatePressure(value);
         window.activateWater = () => app.activateWater();
         window.deactivateWater = () => app.deactivateWater();
