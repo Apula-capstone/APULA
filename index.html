@@ -635,17 +635,21 @@
             transform: translateY(0) scale(0.98);
         }
 
-        .camera-control-btn.danger {
-            background: linear-gradient(135deg, var(--primary-red) 0%, #FF5555 100%);
-        }
+        .camera-control-btn.warning {
+    background: linear-gradient(135deg, var(--yellow-warning) 0%, #FFAA00 100%);
+}
 
-        .camera-control-btn.success {
-            background: linear-gradient(135deg, var(--neon-green) 0%, #4CAF50 100%);
-        }
+.camera-control-btn.danger {
+    background: linear-gradient(135deg, var(--primary-red) 0%, #FF5555 100%);
+}
 
-        .camera-control-btn.secondary {
-            background: linear-gradient(135deg, var(--electric-blue) 0%, #118AB2 100%);
-        }
+.camera-control-btn.success {
+    background: linear-gradient(135deg, var(--neon-green) 0%, #4CAF50 100%);
+}
+
+.camera-control-btn.secondary {
+    background: linear-gradient(135deg, var(--electric-blue) 0%, #118AB2 100%);
+}
 
         .camera-control-btn.disabled {
             background: linear-gradient(135deg, #666, #888);
@@ -895,13 +899,73 @@
             animation: pulse 1s infinite;
         }
 
-        /* Arduino Controls */
-        .arduino-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-md);
-        }
+/* Arduino Controls */
+.arduino-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+/* Web Serial Info Box - ADD THIS */
+.web-serial-info {
+    background: rgba(0, 180, 216, 0.1);
+    border: 2px solid var(--electric-blue);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    font-size: 0.85rem;
+}
+
+.web-serial-info h4 {
+    color: var(--electric-blue);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.web-serial-info ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.web-serial-info li {
+    margin-bottom: 5px;
+    color: var(--text-dim);
+}
+
+.web-serial-info .browser-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.browser-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+.browser-item i {
+    color: var(--electric-blue);
+}
+
+/* Sensor Display - THIS SHOULD ALREADY EXIST BELOW */
+.sensor-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    background: rgba(255, 107, 53, 0.05);
+    padding: var(--spacing-sm);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 107, 53, 0.1);
+}
 
         /* Sensor Display */
         .sensor-display {
