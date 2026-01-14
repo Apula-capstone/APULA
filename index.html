@@ -1872,7 +1872,7 @@
             <!-- Left Column -->
             <div class="column">
                 <!-- System Status with Arduino -->
-                <div class="card">
+<div class="card">
     <h2 class="card-title">
         <i class="fas fa-shield-alt"></i>
         System Status
@@ -1934,7 +1934,7 @@
             <i class="fas fa-bolt"></i>
             Test Connection
         </button>
-        <button class="camera-control-btn warning" onclick="arduino.testSensors()">
+        <button class="camera-control-btn warning" onclick="arduinoCommand.testSensors()">
             <i class="fas fa-vial"></i>
             Test Sensors
         </button>
@@ -1942,10 +1942,36 @@
             <i class="fas fa-fire"></i>
             Simulate Fire
         </button>
-        <button class="camera-control-btn success" onclick="arduinoCommand.connect()">
-            <i class="fas fa-plug"></i>
-            Reconnect
+        <button class="camera-control-btn danger" onclick="arduinoCommand.disconnect()">
+            <i class="fas fa-unplug"></i>
+            Disconnect
         </button>
+    </div>
+    
+    <!-- Web Serial Info Box -->
+    <div class="web-serial-info">
+        <h4><i class="fas fa-info-circle"></i> Arduino Connection Info</h4>
+        <p>Connect your Arduino UNO with flame sensors using Web Serial API:</p>
+        <ul>
+            <li>Connect Arduino via USB to your computer</li>
+            <li>Click "Connect Arduino" button above</li>
+            <li>Select your Arduino device from the list</li>
+            <li>Make sure Arduino is sending data at 9600 baud</li>
+        </ul>
+        <div class="browser-list">
+            <div class="browser-item">
+                <i class="fab fa-chrome"></i>
+                <span>Chrome 89+</span>
+            </div>
+            <div class="browser-item">
+                <i class="fab fa-edge"></i>
+                <span>Edge 89+</span>
+            </div>
+            <div class="browser-item">
+                <i class="fab fa-opera"></i>
+                <span>Opera 76+</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2270,155 +2296,322 @@
         
         // === ENHANCED ARDUINO INTEGRATION ===
 
+// === PHYSICAL ARDUINO INTEGRATION (Web Serial API) ===
+
 class ArduinoIntegration {
     constructor() {
-        this.ws = null;
+        this.port = null;
+        this.reader = null;
+        this.writer = null;
         this.connected = false;
         this.reconnectAttempts = 0;
-        this.maxReconnectAttempts = 10;
+        this.maxReconnectAttempts = 5;
         this.sensorStates = [1, 1, 1]; // 1 = no fire, 0 = fire
         this.fireDetected = false;
         this.fireLocation = "";
         this.autoReconnect = true;
+        this.baudRate = 9600; // Standard Arduino baud rate
+        this.reading = false;
         
         this.init();
     }
     
     init() {
-        console.log('Initializing Arduino integration...');
-        this.connectWebSocket();
+        console.log('Initializing Arduino integration with Web Serial API...');
+        
+        // Check if Web Serial API is supported
+        if (!('serial' in navigator)) {
+            console.error('Web Serial API not supported in this browser');
+            this.showWebSerialError();
+            return;
+        }
         
         // Make Arduino status card clickable
         const arduinoCard = document.getElementById('arduinoStatusCard');
         if (arduinoCard) {
             arduinoCard.addEventListener('click', () => {
                 if (!this.connected) {
-                    this.reconnect();
+                    this.connectSerial();
                 }
             });
         }
         
-        // Add Arduino test button if not exists
-        this.addArduinoTestButton();
+        // Add connect button to controls
+        this.addConnectButton();
+        
+        // Show initial status
+        this.updateConnectionStatus('disconnected');
     }
     
-    connectWebSocket() {
+    showWebSerialError() {
+        const errorHtml = `
+            <div style="background: rgba(255,68,68,0.1); border: 2px solid var(--primary-red); 
+                        border-radius: 10px; padding: 15px; margin-top: 10px;">
+                <h4 style="color: var(--primary-red); margin-bottom: 10px;">
+                    <i class="fas fa-exclamation-triangle"></i> Web Serial API Not Supported
+                </h4>
+                <p style="font-size: 0.85rem; color: var(--text-dim);">
+                    Your browser doesn't support direct Arduino connection.<br>
+                    <strong>Supported browsers:</strong> Chrome/Edge 89+, Opera 76+
+                </p>
+                <p style="font-size: 0.8rem; margin-top: 8px;">
+                    Try using Chrome or Edge browser to connect to your physical Arduino.
+                </p>
+            </div>
+        `;
+        
+        const arduinoControls = document.getElementById('arduinoControls');
+        if (arduinoControls) {
+            arduinoControls.innerHTML = errorHtml + arduinoControls.innerHTML;
+        }
+        
+        this.updateConnectionStatus('error');
+    }
+    
+    async connectSerial() {
         try {
-            // Determine WebSocket URL
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const host = window.location.hostname;
-            const port = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
-            const wsUrl = `${protocol}//${host}:${port}/arduino-ws`;
-            
-            console.log('🔌 Connecting to Arduino WebSocket:', wsUrl);
-            
+            console.log('🔌 Requesting serial port...');
             this.updateConnectionStatus('connecting');
             
-            this.ws = new WebSocket(wsUrl);
+            // Request a serial port
+            this.port = await navigator.serial.requestPort();
             
-            this.ws.onopen = () => {
-                console.log('✅ Connected to Arduino server');
-                this.connected = true;
-                this.reconnectAttempts = 0;
-                this.updateConnectionStatus('connected');
-                app.showNotification('Arduino Connected', 'Connected to Arduino UNO with 3 flame sensors', 'success');
-                app.addLog('Arduino WebSocket connection established', 'arduino');
-            };
+            console.log('✅ Port selected:', this.port.getInfo());
             
-            this.ws.onmessage = (event) => {
-                this.handleMessage(event.data);
-            };
+            // Open the port with Arduino standard baud rate
+            await this.port.open({ baudRate: this.baudRate });
             
-            this.ws.onerror = (error) => {
-                console.error('Arduino WebSocket error:', error);
-                this.updateConnectionStatus('error');
-                app.addLog('Arduino connection error', 'alert');
-            };
+            console.log('✅ Port opened at', this.baudRate, 'baud');
             
-            this.ws.onclose = () => {
-                console.log('🔌 Arduino WebSocket disconnected');
-                this.connected = false;
-                this.updateConnectionStatus('disconnected');
-                
-                // Try to reconnect
-                if (this.autoReconnect && this.reconnectAttempts < this.maxReconnectAttempts) {
-                    this.reconnectAttempts++;
-                    const delay = Math.min(3000 * this.reconnectAttempts, 30000); // Max 30 seconds
-                    console.log(`Reconnecting in ${delay/1000} seconds... (attempt ${this.reconnectAttempts})`);
-                    
-                    setTimeout(() => {
-                        if (!this.connected) {
-                            this.connectWebSocket();
-                        }
-                    }, delay);
-                }
-            };
+            // Set up text encoder/decoder
+            const textDecoder = new TextDecoderStream();
+            const readableStreamClosed = this.port.readable.pipeTo(textDecoder.writable);
+            this.reader = textDecoder.readable.getReader();
+            
+            // Set up writer
+            const textEncoder = new TextEncoderStream();
+            const writableStreamClosed = textEncoder.readable.pipeTo(this.port.writable);
+            this.writer = textEncoder.writable.getWriter();
+            
+            this.connected = true;
+            this.reconnectAttempts = 0;
+            this.updateConnectionStatus('connected');
+            
+            // Send connection confirmation to Arduino
+            await this.sendToArduino('CONNECTED\n');
+            
+            app.showNotification('Arduino Connected', 
+                'Connected to Arduino UNO via Serial. Sensors active.', 
+                'success');
+            app.addLog('Arduino connected via Web Serial API', 'arduino');
+            
+            // Start reading data
+            this.startReading();
+            
+            // Set up disconnect handling
+            this.port.addEventListener('disconnect', () => {
+                console.log('Arduino disconnected');
+                this.handleDisconnect();
+            });
             
         } catch (error) {
-            console.error('Failed to connect to WebSocket:', error);
-            this.updateConnectionStatus('error');
-        }
-    }
-    
-    handleMessage(data) {
-        try {
-            const message = JSON.parse(data);
-            console.log('📨 Arduino message:', message);
+            console.error('Failed to connect to Arduino:', error);
             
-            switch(message.type) {
-                case 'connection':
-                    console.log('Server:', message.message);
-                    break;
-                    
-                case 'arduino_status':
-                    this.handleArduinoStatus(message);
-                    break;
-                    
-                case 'sensor_data':
-                    this.handleSensorData(message);
-                    break;
-                    
-                case 'fire_alert':
-                    this.handleFireAlert(message);
-                    break;
-                    
-                case 'command_response':
-                    app.showNotification('Arduino Command', message.message, 'info');
-                    break;
+            if (error.name === 'NotFoundError') {
+                app.showNotification('No Arduino Found', 
+                    'No Arduino device was selected. Please try again.', 
+                    'warning');
+            } else if (error.name === 'SecurityError') {
+                app.showNotification('Security Error', 
+                    'Your browser blocked the Arduino connection for security.', 
+                    'error');
+            } else {
+                app.showNotification('Connection Failed', 
+                    `Failed to connect: ${error.message}`, 
+                    'error');
             }
             
-        } catch (error) {
-            console.error('Error parsing Arduino message:', error);
+            this.updateConnectionStatus('disconnected');
         }
     }
     
-    handleArduinoStatus(message) {
-        switch(message.status) {
-            case 'connected':
-                this.updateConnectionStatus('connected');
-                break;
-            case 'disconnected':
-                this.updateConnectionStatus('disconnected');
-                break;
-            case 'error':
-                this.updateConnectionStatus('error');
-                break;
-        }
-    }
-    
-    handleSensorData(data) {
-        this.sensorStates = data.sensorValues || [1, 1, 1];
-        this.updateSensorDisplay();
+    async startReading() {
+        if (this.reading) return;
         
-        // Update sensor values in statistics
-        this.updateSensorStats();
+        this.reading = true;
+        console.log('📡 Starting to read Arduino data...');
+        
+        try {
+            while (this.connected && this.reading) {
+                try {
+                    const { value, done } = await this.reader.read();
+                    if (done) {
+                        console.log('Reader done');
+                        break;
+                    }
+                    
+                    if (value) {
+                        this.parseArduinoData(value);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error reading from Arduino:', error);
+                    break;
+                }
+            }
+        } finally {
+            this.reading = false;
+            this.reader.releaseLock();
+        }
+    }
+    
+    parseArduinoData(data) {
+        try {
+            // Split data by newlines (Arduino usually sends one reading per line)
+            const lines = data.split('\n').filter(line => line.trim() !== '');
+            
+            lines.forEach(line => {
+                console.log('📨 Arduino:', line);
+                
+                // Parse different data formats from Arduino
+                if (line.startsWith('SENSORS:')) {
+                    // Format: SENSORS:1,1,1
+                    const sensorData = line.replace('SENSORS:', '').trim();
+                    const sensorValues = sensorData.split(',').map(val => parseInt(val));
+                    
+                    if (sensorValues.length === 3) {
+                        this.sensorStates = sensorValues;
+                        this.updateSensorDisplay();
+                        this.updateSensorStats();
+                    }
+                    
+                } else if (line.startsWith('FIRE:')) {
+                    // Format: FIRE:Sensor2:250
+                    const fireData = line.replace('FIRE:', '').trim();
+                    const parts = fireData.split(':');
+                    
+                    if (parts.length >= 2) {
+                        const sensorName = parts[0];
+                        const sensorValue = parseInt(parts[1]) || 0;
+                        const sensorIndex = this.getSensorIndex(sensorName);
+                        
+                        if (sensorIndex !== -1) {
+                            this.sensorStates = [1, 1, 1];
+                            this.sensorStates[sensorIndex] = 0; // Fire detected
+                            
+                            this.handleFireAlert({
+                                sensorName: sensorName,
+                                sensorIndex: sensorIndex,
+                                value: sensorValue,
+                                sensorValues: this.sensorStates,
+                                location: `Arduino: ${sensorName}`,
+                                message: `🔥 FIRE DETECTED on ${sensorName}`
+                            });
+                        }
+                    }
+                    
+                } else if (line.includes('OK') || line.includes('READY')) {
+                    // Arduino is ready
+                    console.log('Arduino ready:', line);
+                    
+                } else if (line.includes('TEST')) {
+                    // Test response
+                    app.showNotification('Arduino Test', line, 'info');
+                    
+                } else {
+                    // Try to parse as comma-separated sensor values
+                    const values = line.split(',').map(val => parseInt(val.trim()));
+                    if (values.length === 3 && values.every(v => !isNaN(v))) {
+                        this.sensorStates = values.map(v => v < 500 ? 0 : 1); // Convert to fire/no-fire
+                        this.updateSensorDisplay();
+                        this.updateSensorStats();
+                    }
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error parsing Arduino data:', error);
+        }
+    }
+    
+    getSensorIndex(sensorName) {
+        const sensorMap = {
+            'D2': 0, 'Sensor1': 0, 'S1': 0,
+            'D3': 1, 'Sensor2': 1, 'S2': 1,
+            'D4': 2, 'Sensor3': 2, 'S3': 2
+        };
+        return sensorMap[sensorName] !== undefined ? sensorMap[sensorName] : -1;
+    }
+    
+    async sendToArduino(data) {
+        if (this.writer && this.connected) {
+            try {
+                await this.writer.write(data);
+                console.log('📤 Sent to Arduino:', data.trim());
+                return true;
+            } catch (error) {
+                console.error('Error sending to Arduino:', error);
+                return false;
+            }
+        } else {
+            app.showNotification('Arduino Error', 'Arduino not connected', 'error');
+            return false;
+        }
+    }
+    
+    handleDisconnect() {
+        console.log('🔌 Arduino disconnected');
+        this.connected = false;
+        this.reading = false;
+        this.updateConnectionStatus('disconnected');
+        
+        app.showNotification('Arduino Disconnected', 
+            'Arduino was disconnected', 
+            'warning');
+        app.addLog('Arduino disconnected', 'arduino');
+        
+        // Try to reconnect
+        if (this.autoReconnect && this.reconnectAttempts < this.maxReconnectAttempts) {
+            this.reconnectAttempts++;
+            setTimeout(() => {
+                if (!this.connected) {
+                    console.log('Attempting to reconnect...');
+                    this.connectSerial();
+                }
+            }, 3000 * this.reconnectAttempts);
+        }
+    }
+    
+    async disconnect() {
+        if (this.reader) {
+            this.reading = false;
+            await this.reader.cancel();
+            this.reader = null;
+        }
+        
+        if (this.writer) {
+            await this.writer.close();
+            this.writer = null;
+        }
+        
+        if (this.port) {
+            await this.port.close();
+            this.port = null;
+        }
+        
+        this.connected = false;
+        this.updateConnectionStatus('disconnected');
+        
+        app.showNotification('Arduino Disconnected', 
+            'Disconnected from Arduino', 
+            'info');
     }
     
     handleFireAlert(data) {
         console.log('🚨 FIRE ALERT from Arduino:', data);
         
         this.fireDetected = true;
-        this.sensorStates = data.sensorValues || [0, 1, 1]; // Default: fire at sensor 1
+        this.sensorStates = data.sensorValues || [0, 1, 1];
         this.fireLocation = data.location || 'Unknown Location';
         
         // Update sensor display
@@ -2430,7 +2623,7 @@ class ArduinoIntegration {
             fireLocationElement.textContent = this.fireLocation;
         }
         
-        // Update fire size estimate based on number of sensors detecting fire
+        // Update fire size estimate
         const fireSensors = this.sensorStates.filter(state => state === 0).length;
         let fireSize = 'SMALL';
         if (fireSensors >= 2) fireSize = 'MEDIUM';
@@ -2456,11 +2649,6 @@ class ArduinoIntegration {
         ).join(', ');
         
         app.addLog(`🔥 ARDUINO: ${data.message} [${sensorInfo}]`, 'alert');
-        
-        // If this is a test, show notification
-        if (data.isTest || data.isSimulation) {
-            app.showNotification('Test Fire Alert', 'Simulated fire detection from Arduino', 'warning');
-        }
     }
     
     showArduinoFireAlert() {
@@ -2494,15 +2682,15 @@ class ArduinoIntegration {
                 statusText.textContent = 'Connecting...';
                 card.className = 'status-card arduino-warning';
                 cardText.textContent = 'CONNECTING...';
-                cardSubtext.textContent = 'Establishing connection';
-                controls.style.display = 'none';
+                cardSubtext.textContent = 'Select Arduino device';
+                controls.style.display = 'grid';
                 sensorDisplay.style.display = 'none';
                 break;
                 
             case 'connected':
                 dot.className = 'connection-dot connected';
-                dot.title = 'Arduino connected';
-                statusText.textContent = 'Connected';
+                dot.title = 'Arduino connected via Serial';
+                statusText.textContent = 'Connected (Serial)';
                 card.className = 'status-card arduino-connected';
                 cardText.textContent = 'ARDUINO CONNECTED';
                 cardSubtext.textContent = '3 Flame Sensors Active';
@@ -2516,7 +2704,7 @@ class ArduinoIntegration {
                 statusText.textContent = 'Disconnected';
                 card.className = 'status-card arduino-disconnected';
                 cardText.textContent = 'ARDUINO OFFLINE';
-                cardSubtext.textContent = 'Click to reconnect';
+                cardSubtext.textContent = 'Click to Connect';
                 controls.style.display = 'grid';
                 sensorDisplay.style.display = 'none';
                 break;
@@ -2527,7 +2715,7 @@ class ArduinoIntegration {
                 statusText.textContent = 'Error';
                 card.className = 'status-card arduino-warning';
                 cardText.textContent = 'CONNECTION ERROR';
-                cardSubtext.textContent = 'Check Arduino connection';
+                cardSubtext.textContent = 'Check browser support';
                 controls.style.display = 'grid';
                 sensorDisplay.style.display = 'none';
                 break;
@@ -2560,11 +2748,9 @@ class ArduinoIntegration {
     }
     
     updateSensorIndicators() {
-        // Update sensor status in header or status panel if needed
         const fireSensors = this.sensorStates.filter(state => state === 0).length;
         
         if (fireSensors > 0) {
-            // Update Arduino card to show fire status
             const arduinoCard = document.getElementById('arduinoStatusCard');
             if (arduinoCard) {
                 arduinoCard.classList.add('alert');
@@ -2574,7 +2760,6 @@ class ArduinoIntegration {
                 }
             }
         } else {
-            // Remove alert status
             const arduinoCard = document.getElementById('arduinoStatusCard');
             if (arduinoCard) {
                 arduinoCard.classList.remove('alert');
@@ -2583,88 +2768,59 @@ class ArduinoIntegration {
     }
     
     updateSensorStats() {
-        // Update fire detection statistics
         const fireCount = this.sensorStates.filter(state => state === 0).length;
-        
-        // Update stats display if you have one
         const statsElement = document.getElementById('activeFireSensors');
         if (statsElement) {
             statsElement.textContent = fireCount;
         }
     }
     
-    sendCommand(command, data = {}) {
-        if (this.ws && this.connected) {
-            const message = JSON.stringify({
-                command: command,
-                ...data,
-                timestamp: new Date().toISOString()
-            });
-            this.ws.send(message);
-            console.log('📤 Sent command to Arduino:', command);
-            return true;
-        } else {
-            app.showNotification('Arduino Error', 'Arduino not connected', 'error');
-            return false;
-        }
-    }
-    
-    reconnect() {
-        console.log('Attempting to reconnect to Arduino...');
-        this.autoReconnect = true;
-        this.reconnectAttempts = 0;
-        this.connectWebSocket();
-        app.showNotification('Arduino', 'Reconnecting to Arduino...', 'info');
-    }
-    
-    addArduinoTestButton() {
-        // Check if test button already exists
-        if (document.getElementById('arduinoTestButton')) return;
+    addConnectButton() {
+        // Check if connect button already exists
+        if (document.getElementById('arduinoConnectBtn')) return;
         
-        // Add test button to the Arduino controls section
         const arduinoControls = document.getElementById('arduinoControls');
         if (arduinoControls) {
-            const testBtn = document.createElement('button');
-            testBtn.id = 'arduinoTestButton';
-            testBtn.className = 'camera-control-btn warning';
-            testBtn.innerHTML = '<i class="fas fa-vial"></i> Test Sensors';
-            testBtn.onclick = () => {
-                this.testSensors();
+            const connectBtn = document.createElement('button');
+            connectBtn.id = 'arduinoConnectBtn';
+            connectBtn.className = 'camera-control-btn success';
+            connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connect Arduino';
+            connectBtn.onclick = () => {
+                this.connectSerial();
             };
             
-            // Insert before the last button (reconnect button)
+            // Add as first button
             if (arduinoControls.children.length > 0) {
-                arduinoControls.insertBefore(testBtn, arduinoControls.children[arduinoControls.children.length - 1]);
+                arduinoControls.insertBefore(connectBtn, arduinoControls.firstChild);
             } else {
-                arduinoControls.appendChild(testBtn);
+                arduinoControls.appendChild(connectBtn);
             }
         }
     }
     
     testSensors() {
         // Send test command to Arduino
-        if (this.sendCommand('test_arduino')) {
+        if (this.sendToArduino('TEST\n')) {
             app.showNotification('Arduino Test', 'Test command sent to Arduino', 'info');
+        } else {
+            // If not connected, simulate test
+            this.simulateSensorTest();
         }
-        
-        // Also simulate sensor test locally
-        this.simulateSensorTest();
     }
     
     simulateSensorTest() {
-        // Simulate a sensor test sequence
+        // Simulate a sensor test sequence (for when Arduino is not connected)
         const originalStates = [...this.sensorStates];
         
         // Flash each sensor
         for (let i = 0; i < 3; i++) {
             setTimeout(() => {
                 this.sensorStates = [1, 1, 1];
-                this.sensorStates[i] = 0; // Show fire on this sensor
+                this.sensorStates[i] = 0;
                 this.updateSensorDisplay();
                 
                 app.showNotification(`Sensor Test`, `Testing Sensor ${i+1} (D${i+2})`, 'info');
                 
-                // Reset after 500ms
                 setTimeout(() => {
                     this.sensorStates[i] = 1;
                     this.updateSensorDisplay();
@@ -2672,7 +2828,6 @@ class ArduinoIntegration {
             }, i * 1000);
         }
         
-        // Restore original states
         setTimeout(() => {
             this.sensorStates = originalStates;
             this.updateSensorDisplay();
@@ -2686,27 +2841,28 @@ window.arduino = new ArduinoIntegration();
 // Arduino command functions
 window.arduinoCommand = {
     testConnection: () => {
-        if (window.arduino.sendCommand('test_arduino')) {
-            app.showNotification('Arduino Test', 'Test command sent to Arduino', 'info');
+        if (window.arduino.sendToArduino('PING\n')) {
+            app.showNotification('Arduino Test', 'Ping sent to Arduino', 'info');
         }
     },
     
     simulateFire: () => {
-        // Send simulate fire command to server
-        if (window.arduino.sendCommand('simulate_fire')) {
+        // Send fire simulation command
+        if (window.arduino.sendToArduino('SIMULATE_FIRE\n')) {
             app.showNotification('Fire Simulation', 'Simulating fire detection', 'warning');
         }
     },
     
     connect: () => {
-        window.arduino.reconnect();
+        window.arduino.connectSerial();
     },
     
     disconnect: () => {
-        if (window.arduino.ws) {
-            window.arduino.ws.close();
-            app.showNotification('Arduino', 'Disconnected from Arduino', 'info');
-        }
+        window.arduino.disconnect();
+    },
+    
+    testSensors: () => {
+        window.arduino.testSensors();
     }
 };
 
