@@ -1,0 +1,13 @@
+directories:
+  output: release
+  buildResources: build
+appId: com.apula.fire-prevention
+productName: APULA Fire System
+files:
+  - filter:
+      - dist/**/*
+      - electron/**/*
+      - public/**/*
+win:
+  target: portable
+electronVersion: 40.0.0

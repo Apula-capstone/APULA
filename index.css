@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: radial-gradient(circle at center, #7c2d12 0%, #1c1917 100%);
+    color: white;
+    min-height: 100vh;
+    @apply overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .kahoot-card {
+    @apply transition-transform duration-200 ease-in-out transition-shadow duration-200 ease-in-out;
+  }
+  .kahoot-card:hover {
+    @apply -translate-y-1 shadow-[0_10px_25px_-5px_rgba(249,115,22,0.4)];
+  }
+  .status-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-emergency-flash {
+  animation: emergency-flash 1s infinite;
+}
+
+@keyframes emergency-flash {
+  0%, 100% { background-color: rgba(185, 28, 28, 0.9); }
+  50% { background-color: rgba(220, 38, 38, 0.9); }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "APULA - Automated Prevention Unit for Lethal Ablaze",
+  "package_name": "com.apula.fireprevention",
+  "description": "A fire detection dashboard featuring real-time Arduino UNO sensor monitoring, 3-zone graphing, and automated SMS alerts.",
+  "requestFramePermissions": [
+    "serial"
+  ]
+}
