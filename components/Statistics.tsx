@@ -29,7 +29,7 @@ const Statistics: React.FC<Props> = ({ data, fireCount }) => {
         </div>
       </div>
 
-      <div className="h-[250px] md:h-[400px] w-full">
+      <div className="h-[250px] md:h-[400px] w-full min-h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>

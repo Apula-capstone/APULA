@@ -7,6 +7,7 @@ interface LiveCameraProps {
 const LiveCamera: React.FC<LiveCameraProps> = ({ streamUrl = "http://192.168.4.1:81/" }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const isMixedContent = window.location.protocol === 'https:' && streamUrl.startsWith('http:');
 
   return (
     <div className="bg-stone-900 rounded-[30px] p-6 border border-white/5 overflow-hidden relative group">
@@ -16,22 +17,31 @@ const LiveCamera: React.FC<LiveCameraProps> = ({ streamUrl = "http://192.168.4.1
           Live Stream
         </h2>
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${isError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></span>
+          <span className={`w-2 h-2 rounded-full ${isError || isMixedContent ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></span>
           <span className="text-[10px] font-black text-stone-500 uppercase tracking-widest">
-            {isError ? 'Offline' : 'Live'}
+            {isError || isMixedContent ? 'Offline' : 'Live'}
           </span>
         </div>
       </div>
 
       <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/5 relative flex items-center justify-center">
-        {isLoading && !isError && (
+        {isMixedContent ? (
+           <div className="flex flex-col items-center gap-3 text-stone-600 p-6 text-center">
+             <i className="fa-solid fa-lock text-4xl text-orange-500"></i>
+             <p className="text-[10px] font-black uppercase tracking-widest">
+               Security Restriction<br/>
+               <span className="text-stone-400">Cannot connect to Local Device (HTTP) from Secure Web (HTTPS)</span>
+             </p>
+             <p className="text-[9px] text-stone-500 mt-2 max-w-[200px]">
+               Please use the Desktop App or run locally to view the stream.
+             </p>
+           </div>
+        ) : isLoading && !isError ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10 bg-black">
             <i className="fa-solid fa-circle-notch fa-spin text-orange-500 text-2xl"></i>
             <p className="text-[10px] font-bold text-stone-500 uppercase tracking-widest">Connecting to Cam...</p>
           </div>
-        )}
-
-        {isError ? (
+        ) : isError ? (
           <div className="flex flex-col items-center gap-3 text-stone-600">
             <i className="fa-solid fa-video-slash text-4xl"></i>
             <p className="text-[10px] font-black uppercase tracking-widest text-center px-4">
