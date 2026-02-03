@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">APULA</string>
+    <string name="title_activity_main">APULA</string>
+    <string name="package_name">com.apula.fire_prevention</string>
+    <string name="custom_url_scheme">com.apula.fire_prevention</string>
+</resources>
